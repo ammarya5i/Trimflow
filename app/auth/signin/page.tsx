@@ -12,6 +12,7 @@ import { ArrowLeft } from 'lucide-react'
 
 export default function SignInPage() {
   const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
   const handleSignIn = async (e: React.FormEvent) => {
@@ -20,8 +21,9 @@ export default function SignInPage() {
 
     setIsLoading(true)
     try {
-      const result = await signIn('email', {
+      const result = await signIn('credentials', {
         email,
+        password: password || 'demo', // Use demo password for simplicity
         redirect: false,
         callbackUrl: '/dashboard',
       })
@@ -30,9 +32,12 @@ export default function SignInPage() {
         throw new Error(result.error)
       }
 
-      toast.success('Check your email for the magic link!')
+      if (result?.ok) {
+        toast.success('Signed in successfully!')
+        window.location.href = '/dashboard'
+      }
     } catch (error) {
-      toast.error('Failed to send magic link. Please try again.')
+      toast.error('Failed to sign in. Please try again.')
     } finally {
       setIsLoading(false)
     }
@@ -60,7 +65,7 @@ export default function SignInPage() {
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">Welcome back</CardTitle>
             <CardDescription>
-              Enter your email to receive a magic link
+              Sign in to your TrimFlow account
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -76,8 +81,18 @@ export default function SignInPage() {
                   required
                 />
               </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Enter password (optional)"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? 'Sending...' : 'Send Magic Link'}
+                {isLoading ? 'Signing in...' : 'Sign In'}
               </Button>
             </form>
             <div className="mt-6 text-center text-sm text-muted-foreground">
