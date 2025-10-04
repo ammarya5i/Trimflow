@@ -453,9 +453,22 @@ export function BookingPage({ barbershop }: BookingPageProps) {
                 <p className="text-sm text-muted-foreground">Book an appointment</p>
               </div>
             </div>
-            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+            <div className="flex items-center space-x-3 text-sm text-muted-foreground">
               <MapPin className="w-4 h-4" />
-              <span>{barbershop.city}, {barbershop.state}</span>
+              <span>{barbershop.city}{barbershop.state ? `, ${barbershop.state}` : ''}</span>
+              {barbershop.phone && (
+                <a href={`tel:${barbershop.phone}`} className="hover:text-foreground">Call</a>
+              )}
+              {barbershop.address && (
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${barbershop.address} ${barbershop.city ?? ''} ${barbershop.state ?? ''}`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-foreground"
+                >
+                  Directions
+                </a>
+              )}
             </div>
           </div>
         </div>

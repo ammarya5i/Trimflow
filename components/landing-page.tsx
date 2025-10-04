@@ -176,6 +176,9 @@ export function LandingPage() {
             <Link href="#testimonials" className="text-muted-foreground hover:text-foreground">
               Testimonials
             </Link>
+            <Link href="/s" className="text-muted-foreground hover:text-foreground">
+              Find a Barbershop
+            </Link>
           </nav>
           <div className="flex items-center space-x-4">
             <Button variant="ghost" asChild>
