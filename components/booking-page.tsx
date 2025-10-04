@@ -17,6 +17,7 @@ interface BookingPageProps {
 
 export function BookingPage({ barbershop }: BookingPageProps) {
   const [step, setStep] = useState(1)
+  const [appointmentId, setAppointmentId] = useState<string>('')
   const [selectedDate, setSelectedDate] = useState('')
   const [selectedTime, setSelectedTime] = useState('')
   const [selectedService, setSelectedService] = useState('')
@@ -103,7 +104,7 @@ export function BookingPage({ barbershop }: BookingPageProps) {
 
   const handleBooking = async () => {
     if (!selectedService || !selectedStaff || !selectedDate || !selectedTime) {
-      toast.error('Please complete all required fields')
+      toast({ title: 'Please complete all required fields', variant: 'destructive' })
       return
     }
 
@@ -128,11 +129,15 @@ export function BookingPage({ barbershop }: BookingPageProps) {
         throw new Error('Failed to book appointment')
       }
 
-      toast.success('Appointment booked successfully!')
+      const data = await response.json()
+      if (data?.appointmentId) {
+        setAppointmentId(data.appointmentId)
+      }
+      toast({ title: 'Appointment booked successfully!' })
       setStep(6) // Success step
     } catch (error) {
       console.error('Error booking appointment:', error)
-      toast.error('Failed to book appointment. Please try again.')
+      toast({ title: 'Failed to book appointment. Please try again.', variant: 'destructive' })
     } finally {
       setLoading(false)
     }
@@ -397,6 +402,16 @@ export function BookingPage({ barbershop }: BookingPageProps) {
               <p>• Check your email for confirmation details</p>
               <p>• You can cancel or reschedule up to 2 hours before your appointment</p>
               <p>• Please arrive 5 minutes early for your appointment</p>
+            </div>
+            <div className="flex items-center justify-center gap-3 pt-2">
+              {appointmentId && (
+                <Button asChild>
+                  <a href={`/booking/appointment/${appointmentId}`}>View Details</a>
+                </Button>
+              )}
+              <Button variant="outline" asChild>
+                <a href={`/s/${barbershop.slug}`}>Back to Booking</a>
+              </Button>
             </div>
           </div>
         )
