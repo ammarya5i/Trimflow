@@ -617,7 +617,7 @@ export function OnboardingWizard({ user }: OnboardingWizardProps) {
 
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                {React.createElement(steps[currentStep].icon, { className: "w-5 h-5 text-primary" })}
+                {(() => { const Icon = steps[currentStep].icon; return <Icon className="w-5 h-5 text-primary" /> })()}
               </div>
               <div>
                 <CardTitle className="text-xl">{steps[currentStep].title}</CardTitle>
