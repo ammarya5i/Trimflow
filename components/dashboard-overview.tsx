@@ -221,9 +221,9 @@ export function DashboardOverview() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-medium">{formatCurrency(appointment.total_price)}</p>
+                      <p className="text-sm font-medium">{formatCurrency(appointment.totalPrice ?? 0)}</p>
                       <p className="text-xs text-muted-foreground">
-                        {formatDate(appointment.start_time)}
+                        {formatDate(appointment.startTime)}
                       </p>
                     </div>
                   </div>
