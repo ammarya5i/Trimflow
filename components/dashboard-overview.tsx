@@ -11,7 +11,8 @@ import {
   Clock,
   CheckCircle,
   XCircle,
-  AlertCircle
+  AlertCircle,
+  Settings
 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { formatCurrency, formatDate } from '@/lib/utils'

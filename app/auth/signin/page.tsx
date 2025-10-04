@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { signIn } from 'next-auth/react'
-import { toast } from 'react-hot-toast'
+import { toast } from '@/hooks/use-toast'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
