@@ -40,8 +40,14 @@ export function BookingPage({ barbershop }: BookingPageProps) {
   ]
 
   const getWorkingHours = (dayOfWeek: number) => {
-    const workingDay = barbershop.working_hours.find((wh: any) => wh.day_of_week === dayOfWeek)
-    return workingDay?.is_working ? { start: workingDay.start_time, end: workingDay.end_time } : null
+    const list = (barbershop as any).workingHours || (barbershop as any).working_hours || []
+    const workingDay = list.find((wh: any) => (wh.dayOfWeek ?? wh.day_of_week) === dayOfWeek)
+    if (!workingDay) return null
+    const isWorking = (workingDay.isWorking ?? workingDay.is_working)
+    if (!isWorking) return null
+    const start = (workingDay.startTime ?? workingDay.start_time)
+    const end = (workingDay.endTime ?? workingDay.end_time)
+    return { start, end }
   }
 
   const getAvailableDates = () => {
