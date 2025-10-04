@@ -9,7 +9,7 @@ export const authOptions: NextAuthOptions = {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' }
       },
-      async authorize(credentials) {
+      async authorize(credentials: { email?: string; password?: string } | undefined) {
         if (!credentials?.email) return null
         
         // Return user object for demo - in production, validate against database
@@ -22,7 +22,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async session({ session, token }) {
+    async session({ session, token }: any) {
       if (session.user && token.sub) {
         session.user.id = token.sub
         session.user.email = token.email as string
@@ -30,7 +30,7 @@ export const authOptions: NextAuthOptions = {
       }
       return session
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user }: any) {
       if (user) {
         token.sub = user.id
         token.email = user.email
@@ -46,5 +46,5 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
   },
-  secret: process.env.NEXTAUTH_SECRET || 'fallback-secret-for-build-only-change-in-production',
+  secret: process.env.NEXTAUTH_SECRET,
 }
