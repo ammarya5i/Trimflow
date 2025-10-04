@@ -13,18 +13,37 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.json()
 
-    // Get user from database
-    const user = await prisma.user.findUnique({
+    // Get or create user in database (credentials auth doesn't auto-create)
+    const existing = await prisma.user.findUnique({
       where: { email: session.user.email! },
       select: { id: true },
     })
 
-    if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 })
-    }
+    const user =
+      existing ??
+      (await prisma.user.create({
+        data: {
+          email: session.user.email!,
+          name: session.user.name ?? 'Owner',
+          onboardingCompleted: false,
+        },
+        select: { id: true },
+      }))
 
-    // Generate slug from barbershop name
-    const slug = formData.barbershopSlug || formData.barbershopName.toLowerCase().replace(/\s+/g, '-')
+    // Generate unique slug from barbershop name
+    const baseSlug = (formData.barbershopSlug || formData.barbershopName)
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+    let slug = baseSlug
+    let attempt = 0
+    while (await prisma.barbershop.findUnique({ where: { slug } })) {
+      attempt += 1
+      slug = `${baseSlug}-${attempt}`
+    }
     
     // Create barbershop
     const barbershop = await prisma.barbershop.create({

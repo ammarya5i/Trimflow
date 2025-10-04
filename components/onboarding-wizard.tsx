@@ -671,7 +671,7 @@ export function OnboardingWizard({ user }: OnboardingWizardProps) {
                   <Check className="w-4 h-4 ml-2" />
                 </Button>
               ) : (
-                <Button onClick={handleNext}>
+                <Button onClick={handleNext} type="button">
                   Next
                   <ChevronRight className="w-4 h-4 ml-2" />
                 </Button>
