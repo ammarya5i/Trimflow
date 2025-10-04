@@ -1,0 +1,25 @@
+name: Vercel Deploy Hook
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  trigger-vercel:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vercel Deploy Hook
+        run: |
+          if [ -z "${{ secrets.DEPLOY_HOOK_URL }}" ]; then
+            echo "Missing DEPLOY_HOOK_URL secret" 1>&2
+            exit 1
+          fi
+          code=$(curl -s -o /dev/null -w "%{http_code}" -X POST "${{ secrets.DEPLOY_HOOK_URL }}")
+          echo "HTTP Status: $code"
+          if [ "$code" -lt 200 ] || [ "$code" -ge 400 ]; then
+            echo "Deploy hook failed with HTTP $code" 1>&2
+            exit 1
+          fi
+
