@@ -27,6 +27,8 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
 
@@ -40,9 +42,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const handleSignOut = async () => {
     try {
       await signOut({ callbackUrl: '/' })
-      toast.success('Signed out successfully')
+      toast({ title: 'Signed out successfully' })
     } catch (error) {
-      toast.error('Failed to sign out')
+      toast({ title: 'Failed to sign out', variant: 'destructive' })
     }
   }
 
@@ -145,12 +147,36 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="icon">
-                <Bell className="w-5 h-5" />
-              </Button>
-              <Button variant="ghost" size="icon">
-                <User className="w-5 h-5" />
-              </Button>
+              <div className="relative">
+                <Button variant="ghost" size="icon" onClick={() => {
+                  setIsNotificationsOpen((v) => !v)
+                  setIsProfileMenuOpen(false)
+                }}>
+                  <Bell className="w-5 h-5" />
+                </Button>
+                {isNotificationsOpen && (
+                  <div className="absolute right-0 mt-2 w-64 rounded-md border bg-background shadow-lg z-50">
+                    <div className="p-3 border-b">
+                      <div className="text-sm font-medium">Notifications</div>
+                    </div>
+                    <div className="p-4 text-sm text-muted-foreground">No new notifications</div>
+                  </div>
+                )}
+              </div>
+              <div className="relative">
+                <Button variant="ghost" size="icon" onClick={() => {
+                  setIsProfileMenuOpen((v) => !v)
+                  setIsNotificationsOpen(false)
+                }}>
+                  <User className="w-5 h-5" />
+                </Button>
+                {isProfileMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-40 rounded-md border bg-background shadow-lg z-50">
+                    <Link href="/dashboard/settings" className="block px-3 py-2 text-sm hover:bg-muted">Settings</Link>
+                    <button className="w-full text-left px-3 py-2 text-sm hover:bg-muted" onClick={handleSignOut}>Sign Out</button>
+                  </div>
+                )}
+              </div>
               <Button variant="ghost" onClick={handleSignOut}>
                 <LogOut className="w-4 h-4 mr-2" />
                 Sign Out
