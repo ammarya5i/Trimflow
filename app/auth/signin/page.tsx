@@ -20,13 +20,20 @@ export default function SignInPage() {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!email) return
+    if (!email) {
+      toast.error('Email is required')
+      return
+    }
+    if (!password || password.length < 6) {
+      toast.error('Password must be at least 6 characters')
+      return
+    }
 
     setIsLoading(true)
     try {
       const result = await signIn('credentials', {
         email,
-        password: password || 'demo',
+        password,
         redirect: true,
         callbackUrl: '/dashboard',
       })

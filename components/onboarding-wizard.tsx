@@ -135,6 +135,26 @@ export function OnboardingWizard({ user }: OnboardingWizardProps) {
   const router = useRouter()
 
   const handleNext = () => {
+    // Basic validation per step
+    if (currentStep === 1) {
+      if (!formData.barbershopName?.trim()) {
+        toast.error('Barbershop name is required')
+        return
+      }
+    }
+    if (currentStep === 2) {
+      if (!formData.fullName?.trim()) {
+        toast.error('Full name is required')
+        return
+      }
+    }
+    if (currentStep === 3) {
+      const validServices = formData.services.filter(s => s.name.trim() && s.duration > 0 && s.price >= 0)
+      if (validServices.length === 0) {
+        toast.error('Add at least one valid service')
+        return
+      }
+    }
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1)
     }
@@ -189,6 +209,12 @@ export function OnboardingWizard({ user }: OnboardingWizardProps) {
   const handleComplete = async () => {
     setLoading(true)
     try {
+      // Final validations
+      if (!formData.barbershopName?.trim() || !formData.fullName?.trim()) {
+        toast.error('Please complete required fields')
+        setLoading(false)
+        return
+      }
       const response = await fetch('/api/onboarding/complete', {
         method: 'POST',
         headers: {
