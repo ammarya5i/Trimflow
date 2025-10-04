@@ -34,8 +34,6 @@ jobs:
       - name: Build application
         run: npm run build
         env:
-          DATABASE_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
-          NEXTAUTH_SECRET: "dummy-secret-for-build-test"
+          NEXTAUTH_SECRET: "build-time-secret-12345678901234567890"
           NEXTAUTH_URL: "http://localhost:3000"
-          NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: "pk_test_dummy"
           NEXT_PUBLIC_APP_URL: "http://localhost:3000"

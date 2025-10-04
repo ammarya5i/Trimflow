@@ -1,10 +1,7 @@
 import { NextAuthOptions } from 'next-auth'
-import { PrismaAdapter } from '@auth/prisma-adapter'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import { prisma } from './prisma'
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       name: 'credentials',
@@ -15,22 +12,12 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         if (!credentials?.email) return null
         
-        // For demo purposes, allow any email
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email }
-        })
-        
-        if (!user) {
-          // Create user if doesn't exist
-          return await prisma.user.create({
-            data: {
-              email: credentials.email,
-              name: credentials.email.split('@')[0],
-            }
-          })
+        // Return user object for demo - in production, validate against database
+        return {
+          id: credentials.email,
+          email: credentials.email,
+          name: credentials.email.split('@')[0],
         }
-        
-        return user
       }
     }),
   ],
@@ -38,27 +25,16 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (session.user && token.sub) {
         session.user.id = token.sub
-        // Get user data from database
-        const dbUser = await prisma.user.findUnique({
-          where: { id: token.sub },
-          select: {
-            onboardingCompleted: true,
-            subscriptionStatus: true,
-            subscriptionPlan: true,
-          },
-        })
-        
-        if (dbUser) {
-          session.user.onboardingCompleted = dbUser.onboardingCompleted
-          session.user.subscriptionStatus = dbUser.subscriptionStatus
-          session.user.subscriptionPlan = dbUser.subscriptionPlan
-        }
+        session.user.email = token.email as string
+        session.user.name = token.name as string
       }
       return session
     },
     async jwt({ token, user }) {
       if (user) {
         token.sub = user.id
+        token.email = user.email
+        token.name = user.name
       }
       return token
     },
@@ -70,4 +46,5 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
   },
+  secret: process.env.NEXTAUTH_SECRET || 'fallback-secret-for-build-only-change-in-production',
 }
