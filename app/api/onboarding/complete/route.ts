@@ -63,6 +63,7 @@ export async function POST(request: NextRequest) {
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         currency: 'USD',
         language: 'en',
+        isActive: true,
       },
     })
 

@@ -147,6 +147,10 @@ export function OnboardingWizard({ user }: OnboardingWizardProps) {
         toast.error('Full name is required')
         return
       }
+      if (!formData.phone?.trim()) {
+        toast.error('Phone number is required')
+        return
+      }
     }
     if (currentStep === 3) {
       const validServices = formData.services.filter(s => s.name.trim() && s.duration > 0 && s.price >= 0)
@@ -318,14 +322,15 @@ export function OnboardingWizard({ user }: OnboardingWizardProps) {
                 required
               />
             </div>
-            <div>
-              <Label htmlFor="phone">Phone Number</Label>
+      <div>
+              <Label htmlFor="phone">Phone Number *</Label>
               <Input
                 id="phone"
                 value={formData.phone}
                 onChange={(e) => handleInputChange('phone', e.target.value)}
                 placeholder="+1 (555) 123-4567"
                 type="tel"
+                required
               />
             </div>
           </div>
