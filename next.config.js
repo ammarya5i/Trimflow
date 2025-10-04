@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  // Use default server output to support dynamic routes (e.g., NextAuth)
   trailingSlash: true,
   images: {
     unoptimized: true,
