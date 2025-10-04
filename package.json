@@ -41,7 +41,7 @@
     "@tanstack/react-query": "^5.8.4",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
-    "cmdk": "^0.2.0",
+    "cmdk": "^0.2.1",
     "date-fns": "^2.30.0",
     "lucide-react": "^0.294.0",
     "next": "14.0.4",
@@ -72,6 +72,6 @@
     "typescript": "^5.3.2"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": "18.x"
   }
 }
