@@ -20,8 +20,6 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { signIn } from 'next-auth/react'
-import { toast } from '@/hooks/use-toast'
 
 export function LandingPage() {
   const [email, setEmail] = useState('')
@@ -30,23 +28,8 @@ export function LandingPage() {
 
   const handleGetStarted = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!email) return
-
-    setIsLoading(true)
-    try {
-      await signIn('email', { 
-        email, 
-        redirect: false,
-        callbackUrl: '/dashboard'
-      })
-
-
-      toast.success('Check your email for the magic link!')
-    } catch (error) {
-      toast.error('Failed to send magic link. Please try again.')
-    } finally {
-      setIsLoading(false)
-    }
+    const target = email ? `/auth/signin?signup=1&email=${encodeURIComponent(email)}` : '/auth/signin?signup=1'
+    router.push(target)
   }
 
   const features = [
