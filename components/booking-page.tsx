@@ -11,8 +11,10 @@ import { toast } from '@/hooks/use-toast'
 import { formatCurrency, formatDate, getTimeSlots, isTimeSlotAvailable } from '@/lib/utils'
 import { Calendar, Clock, User, Phone, Mail, MapPin, Star, CheckCircle } from 'lucide-react'
 
+import { BarbershopWithDetails } from '@/types'
+
 interface BookingPageProps {
-  barbershop: any // We'll define this properly later
+  barbershop: BarbershopWithDetails
 }
 
 export function BookingPage({ barbershop }: BookingPageProps) {

@@ -29,7 +29,8 @@ export interface AppointmentWithDetails extends Appointment {
 export interface BarbershopWithDetails extends Barbershop {
   staff: Staff[]
   services: Service[]
-  working_hours: WorkingHours[]
+  workingHours: WorkingHours[]
+  working_hours?: WorkingHours[] // For backward compatibility
 }
 
 export interface StaffWithDetails extends Staff {
