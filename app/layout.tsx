@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { ThemeProvider } from '@/components/theme-provider'
+import { Navbar } from '@/components/navbar'
 import { AuthSessionProvider } from '@/components/session-provider'
 import { Toaster } from '@/components/ui/toaster'
 import './globals.css'
@@ -79,6 +80,7 @@ export default function RootLayout({
             themes={['dark','light','theme-ocean','theme-amber']}
             disableTransitionOnChange
           >
+            <Navbar />
             {children}
             <Toaster />
           </ThemeProvider>

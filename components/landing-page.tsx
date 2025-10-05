@@ -140,39 +140,6 @@ export function LandingPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">T</span>
-            </div>
-            <span className="text-xl font-bold">TrimFlow</span>
-          </div>
-          <nav className="hidden md:flex items-center space-x-6">
-            <Link href="#features" className="text-muted-foreground hover:text-foreground">
-              Features
-            </Link>
-            <Link href="#pricing" className="text-muted-foreground hover:text-foreground">
-              Pricing
-            </Link>
-            <Link href="#testimonials" className="text-muted-foreground hover:text-foreground">
-              Testimonials
-            </Link>
-            <Link href="/s" className="text-muted-foreground hover:text-foreground">
-              Find a Barbershop
-            </Link>
-          </nav>
-          <div className="flex items-center space-x-4">
-            <Button variant="ghost" asChild>
-              <Link href="/auth/signin">Sign In</Link>
-            </Button>
-            <Button asChild>
-              <Link href="#get-started">Get Started</Link>
-            </Button>
-          </div>
-        </div>
-      </header>
 
       {/* Hero Section */}
       <section className="py-20 px-4">
@@ -373,23 +340,23 @@ export function LandingPage() {
               <ul className="space-y-2 text-muted-foreground">
                 <li><Link href="#features" className="hover:text-foreground">Features</Link></li>
                 <li><Link href="#pricing" className="hover:text-foreground">Pricing</Link></li>
-                <li><Link href="/demo" className="hover:text-foreground">Demo</Link></li>
+                <li><Link href="/s" className="hover:text-foreground">Demo</Link></li>
               </ul>
             </div>
             <div>
               <h3 className="font-semibold mb-4">Support</h3>
               <ul className="space-y-2 text-muted-foreground">
-                <li><Link href="/help" className="hover:text-foreground">Help Center</Link></li>
-                <li><Link href="/contact" className="hover:text-foreground">Contact</Link></li>
-                <li><Link href="/status" className="hover:text-foreground">Status</Link></li>
+                <li><Link href="#" className="hover:text-foreground">Help Center</Link></li>
+                <li><Link href="/#get-started" className="hover:text-foreground">Contact</Link></li>
+                <li><Link href="#" className="hover:text-foreground">Status</Link></li>
               </ul>
             </div>
             <div>
               <h3 className="font-semibold mb-4">Legal</h3>
               <ul className="space-y-2 text-muted-foreground">
-                <li><Link href="/privacy" className="hover:text-foreground">Privacy</Link></li>
-                <li><Link href="/terms" className="hover:text-foreground">Terms</Link></li>
-                <li><Link href="/gdpr" className="hover:text-foreground">GDPR</Link></li>
+                <li><Link href="#" className="hover:text-foreground">Privacy</Link></li>
+                <li><Link href="#" className="hover:text-foreground">Terms</Link></li>
+                <li><Link href="#" className="hover:text-foreground">GDPR</Link></li>
               </ul>
             </div>
           </div>

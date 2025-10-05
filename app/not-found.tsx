@@ -34,7 +34,7 @@ export default function NotFound() {
             </div>
             <div className="text-center text-sm text-muted-foreground">
               <p>Looking for a barbershop?</p>
-              <p>Try visiting: <Link href="/s/berber-ali" className="text-primary hover:underline">trimflow.vercel.app/s/berber-ali</Link></p>
+              <p>Try visiting: <Link href="/s" className="text-primary hover:underline">trimflow.vercel.app/s</Link></p>
             </div>
           </CardContent>
         </Card>
