@@ -1,25 +1,58 @@
-import { redirect } from 'next/navigation'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+'use client'
+
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 import { DashboardLayout } from '@/components/dashboard-layout'
 import { DashboardOverview } from '@/components/dashboard-overview'
 
-export default async function DashboardPage() {
-  const session = await getServerSession(authOptions)
+export default function DashboardPage() {
+  const { data: session, status } = useSession()
+  const router = useRouter()
 
-  if (!session?.user) {
-    redirect('/auth/signin')
+  useEffect(() => {
+    if (status === 'loading') return
+    
+    if (!session?.user) {
+      router.push('/auth/signin')
+      return
+    }
+    
+    // Only allow Ahmet to access dashboard
+    if (session.user.email !== 'ahmet@salonahmetbarbers.com') {
+      router.push('/')
+      return
+    }
+  }, [session, status, router])
+
+  if (status === 'loading') {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-lg">Loading...</div>
+        </div>
+      </DashboardLayout>
+    )
   }
 
-  // Check if user has completed onboarding
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email! },
-    select: { onboardingCompleted: true },
-  })
+  if (!session?.user) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-lg">Please sign in to access this page.</div>
+        </div>
+      </DashboardLayout>
+    )
+  }
 
-  if (!user?.onboardingCompleted) {
-    redirect('/onboarding')
+  if (session.user.email !== 'ahmet@salonahmetbarbers.com') {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-lg">Access denied. Admin access required.</div>
+        </div>
+      </DashboardLayout>
+    )
   }
 
   return (

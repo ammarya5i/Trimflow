@@ -37,14 +37,26 @@ export default function CustomersPage() {
   // Redirect if not authenticated
   useEffect(() => {
     if (status === 'loading') return
+    
+    // Debug logging
+    console.log('Session status:', status)
+    console.log('Session user:', session?.user)
+    console.log('User email:', session?.user?.email)
+    
     if (!session?.user) {
+      console.log('No session user, redirecting to signin')
       router.push('/auth/signin')
       return
     }
-    if (session.user.email !== 'ahmet@salonahmetbarbers.com') {
+    
+    // Only redirect non-admin users, but allow Ahmet to access
+    if (session.user.email && session.user.email !== 'ahmet@salonahmetbarbers.com') {
+      console.log('Not Ahmet, redirecting to homepage')
       router.push('/')
       return
     }
+    
+    console.log('Ahmet authenticated, allowing access')
   }, [session, status, router])
 
   // Fetch customers
@@ -161,18 +173,44 @@ export default function CustomersPage() {
     }
   }
 
-  if (status === 'loading' || loading) {
+  if (status === 'loading') {
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center h-64">
-          <div className="text-lg">Loading...</div>
+          <div className="text-lg">Loading session...</div>
         </div>
       </DashboardLayout>
     )
   }
 
   if (!session?.user) {
-    return null
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-lg">Please sign in to access this page.</div>
+        </div>
+      </DashboardLayout>
+    )
+  }
+
+  if (session.user.email !== 'ahmet@salonahmetbarbers.com') {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-lg">Access denied. Admin access required.</div>
+        </div>
+      </DashboardLayout>
+    )
+  }
+
+  if (loading) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-lg">Loading customers...</div>
+        </div>
+      </DashboardLayout>
+    )
   }
 
   return (
