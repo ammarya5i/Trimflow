@@ -1,10 +1,7 @@
 'use client'
 
-import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { 
   Calendar, 
   Clock, 
@@ -19,18 +16,8 @@ import {
   Star
 } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 
 export function LandingPage() {
-  const [email, setEmail] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
-
-  const handleGetStarted = async (e: React.FormEvent) => {
-    e.preventDefault()
-    const target = email ? `/auth/signin?signup=1&email=${encodeURIComponent(email)}` : '/auth/signin?signup=1'
-    router.push(target)
-  }
 
   const features = [
     {
@@ -152,22 +139,15 @@ export function LandingPage() {
             Book your appointment online and discover why we have a 4.9-star rating from 608+ satisfied customers.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-md mx-auto">
-            <form onSubmit={handleGetStarted} className="flex w-full gap-2">
-              <Input
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="flex-1"
-                required
-              />
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? 'Sending...' : 'Get Started'}
-              </Button>
-            </form>
+            <Button asChild size="lg" className="w-full sm:w-auto">
+              <Link href="/s/salon-ahmet-barbers">
+                Book Your Appointment Now
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Link>
+            </Button>
           </div>
           <p className="text-sm text-muted-foreground mt-4">
-            Free forever plan • No credit card required
+            Easy online booking • Same-day appointments available • No account required
           </p>
         </div>
       </section>
@@ -298,23 +278,15 @@ export function LandingPage() {
              Book online now and discover why Salon Ahmet Barbers has a 4.9-star rating from 608+ customers.
            </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-md mx-auto">
-            <form onSubmit={handleGetStarted} className="flex w-full gap-2">
-              <Input
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="flex-1"
-                required
-              />
-               <Button type="submit" disabled={isLoading} size="lg">
-                 {isLoading ? 'Sending...' : 'Book Appointment'}
-                 <ArrowRight className="w-4 h-4 ml-2" />
-               </Button>
-            </form>
+            <Button asChild size="lg" className="w-full sm:w-auto">
+              <Link href="/s/salon-ahmet-barbers">
+                Book Your Appointment Now
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Link>
+            </Button>
           </div>
           <p className="text-sm text-muted-foreground mt-4">
-            Easy online booking • Same-day appointments available • Cancel anytime
+            Easy online booking • Same-day appointments available • No account required
           </p>
         </div>
       </section>

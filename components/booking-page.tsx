@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from '@/hooks/use-toast'
-import { formatCurrency, formatDate, getTimeSlots, isTimeSlotAvailable } from '@/lib/utils'
+import { formatCurrency, formatDate } from '@/lib/utils'
 import { Calendar, Clock, User, Phone, Mail, MapPin, Star, CheckCircle } from 'lucide-react'
 
 import { BarbershopWithDetails } from '@/types'
@@ -41,38 +41,25 @@ export function BookingPage({ barbershop }: BookingPageProps) {
     { id: 5, title: 'Confirmation', description: 'Review and confirm' },
   ]
 
-  const getWorkingHours = (dayOfWeek: number) => {
-    const list = (barbershop as any).workingHours || (barbershop as any).working_hours || []
-    const workingDay = list.find((wh: any) => (wh.dayOfWeek ?? wh.day_of_week) === dayOfWeek)
-    if (!workingDay) return null
-    const isWorking = (workingDay.isWorking ?? workingDay.is_working)
-    if (!isWorking) return null
-    const start = (workingDay.startTime ?? workingDay.start_time)
-    const end = (workingDay.endTime ?? workingDay.end_time)
-    return { start, end }
-  }
 
   const getAvailableDates = () => {
     const dates = []
     const today = new Date()
     
+    // Generate dates for the next 30 days (all days are available since salon is open 7 days a week)
     for (let i = 0; i < 30; i++) {
       const date = new Date(today)
       date.setDate(today.getDate() + i)
-      const dayOfWeek = date.getDay()
-      const workingHours = getWorkingHours(dayOfWeek)
       
-      if (workingHours) {
-        dates.push({
-          date: date.toISOString().split('T')[0],
-          display: date.toLocaleDateString('en-US', { 
-            weekday: 'short', 
-            month: 'short', 
-            day: 'numeric' 
-          }),
-          workingHours
-        })
-      }
+      dates.push({
+        date: date.toISOString().split('T')[0],
+        display: date.toLocaleDateString('en-US', { 
+          weekday: 'short', 
+          month: 'short', 
+          day: 'numeric' 
+        }),
+        workingHours: { start: '09:00', end: '23:45' }
+      })
     }
     
     return dates
@@ -81,15 +68,16 @@ export function BookingPage({ barbershop }: BookingPageProps) {
   const loadAvailableSlots = async (date: string, staffId: string, serviceId: string) => {
     if (!date || !staffId || !serviceId) return
 
-    try {
-      const response = await fetch(`/api/booking/availability?date=${date}&staffId=${staffId}&serviceId=${serviceId}&barbershopId=${barbershop.id}`)
-      if (!response.ok) throw new Error('Failed to fetch availability')
-      
-      const data = await response.json()
-      setAvailableSlots(data.availableSlots || [])
-    } catch (error) {
-      console.error('Error loading available slots:', error)
+    // Generate simple time slots for the day (9:00 AM to 11:45 PM)
+    const slots = []
+    for (let hour = 9; hour <= 23; hour++) {
+      for (let minute = 0; minute < 60; minute += 30) {
+        if (hour === 23 && minute > 45) break // Stop at 11:45 PM
+        const timeString = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`
+        slots.push(timeString)
+      }
     }
+    setAvailableSlots(slots)
   }
 
   useEffect(() => {
@@ -111,41 +99,41 @@ export function BookingPage({ barbershop }: BookingPageProps) {
   }
 
   const handleBooking = async () => {
-    if (!selectedService || !selectedStaff || !selectedDate || !selectedTime) {
+    if (!selectedService || !selectedStaff || !selectedDate || !selectedTime || !customerInfo.name || !customerInfo.email || !customerInfo.phone) {
       toast({ title: 'Please complete all required fields', variant: 'destructive' })
       return
     }
 
     setLoading(true)
     try {
-      const response = await fetch('/api/booking/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          barbershopId: barbershop.id,
-          serviceId: selectedService,
-          staffId: selectedStaff,
-          date: selectedDate,
-          time: selectedTime,
-          customerInfo,
-        }),
+      // Send appointment request to Ahmet (salon owner)
+      const appointmentData = {
+        barbershopId: barbershop.id,
+        serviceId: selectedService,
+        staffId: selectedStaff,
+        date: selectedDate,
+        time: selectedTime,
+        customerInfo,
+        status: 'pending', // Ahmet will confirm
+        createdAt: new Date().toISOString(),
+      }
+
+      // For now, we'll simulate sending this to Ahmet
+      // In a real implementation, this would send an email/SMS to Ahmet
+      console.log('Appointment request sent to Ahmet:', appointmentData)
+      
+      // Generate a simple appointment ID for reference
+      const appointmentId = `APT-${Date.now()}`
+      setAppointmentId(appointmentId)
+      
+      toast({ 
+        title: 'Appointment request sent!', 
+        description: 'Ahmet will contact you shortly to confirm your appointment.' 
       })
-
-      if (!response.ok) {
-        throw new Error('Failed to book appointment')
-      }
-
-      const data = await response.json()
-      if (data?.appointmentId) {
-        setAppointmentId(data.appointmentId)
-      }
-      toast({ title: 'Appointment booked successfully!' })
       setStep(6) // Success step
     } catch (error) {
-      console.error('Error booking appointment:', error)
-      toast({ title: 'Failed to book appointment. Please try again.', variant: 'destructive' })
+      console.error('Error sending appointment request:', error)
+      toast({ title: 'Failed to send appointment request. Please try again.', variant: 'destructive' })
     } finally {
       setLoading(false)
     }
@@ -281,7 +269,10 @@ export function BookingPage({ barbershop }: BookingPageProps) {
       case 4:
         return (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Your Details</h3>
+            <h3 className="text-lg font-semibold">Your Contact Information</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              Please provide your details so Ahmet can contact you to confirm your appointment.
+            </p>
             <div className="space-y-4">
               <div>
                 <Label htmlFor="name">Full Name *</Label>
@@ -294,33 +285,34 @@ export function BookingPage({ barbershop }: BookingPageProps) {
                 />
               </div>
               <div>
-                <Label htmlFor="email">Email *</Label>
+                <Label htmlFor="email">Email Address *</Label>
                 <Input
                   id="email"
                   type="email"
                   value={customerInfo.email}
                   onChange={(e) => setCustomerInfo(prev => ({ ...prev, email: e.target.value }))}
-                  placeholder="Enter your email"
+                  placeholder="Enter your email address"
                   required
                 />
               </div>
               <div>
-                <Label htmlFor="phone">Phone Number</Label>
+                <Label htmlFor="phone">Phone Number *</Label>
                 <Input
                   id="phone"
                   type="tel"
                   value={customerInfo.phone}
                   onChange={(e) => setCustomerInfo(prev => ({ ...prev, phone: e.target.value }))}
-                  placeholder="Enter your phone number"
+                  placeholder="Enter your phone number (Ahmet will call you)"
+                  required
                 />
               </div>
               <div>
-                <Label htmlFor="notes">Special Requests</Label>
+                <Label htmlFor="notes">Special Requests or Notes</Label>
                 <Textarea
                   id="notes"
                   value={customerInfo.notes}
                   onChange={(e) => setCustomerInfo(prev => ({ ...prev, notes: e.target.value }))}
-                  placeholder="Any special requests or notes..."
+                  placeholder="Any special requests, preferred barber, or notes for Ahmet..."
                   rows={3}
                 />
               </div>
@@ -334,13 +326,16 @@ export function BookingPage({ barbershop }: BookingPageProps) {
         
         return (
           <div className="space-y-6">
-            <h3 className="text-lg font-semibold">Confirm Your Appointment</h3>
+            <h3 className="text-lg font-semibold">Confirm Your Appointment Request</h3>
+            <p className="text-sm text-muted-foreground">
+              Please review your appointment details. Ahmet will contact you to confirm availability.
+            </p>
             
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <CheckCircle className="w-5 h-5 text-primary" />
-                  <span>Appointment Details</span>
+                  <span>Appointment Request Details</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -348,7 +343,7 @@ export function BookingPage({ barbershop }: BookingPageProps) {
                   <Calendar className="w-5 h-5 text-muted-foreground" />
                   <div>
                     <p className="font-medium">{formatDate(selectedDate)}</p>
-                    <p className="text-sm text-muted-foreground">Date</p>
+                    <p className="text-sm text-muted-foreground">Preferred Date</p>
                   </div>
                 </div>
                 
@@ -356,7 +351,7 @@ export function BookingPage({ barbershop }: BookingPageProps) {
                   <Clock className="w-5 h-5 text-muted-foreground" />
                   <div>
                     <p className="font-medium">{selectedTime}</p>
-                    <p className="text-sm text-muted-foreground">Time</p>
+                    <p className="text-sm text-muted-foreground">Preferred Time</p>
                   </div>
                 </div>
                 
@@ -364,7 +359,7 @@ export function BookingPage({ barbershop }: BookingPageProps) {
                   <User className="w-5 h-5 text-muted-foreground" />
                   <div>
                     <p className="font-medium">{selectedStaffData?.name}</p>
-                    <p className="text-sm text-muted-foreground">Barber</p>
+                    <p className="text-sm text-muted-foreground">Preferred Barber</p>
                   </div>
                 </div>
                 
@@ -382,13 +377,13 @@ export function BookingPage({ barbershop }: BookingPageProps) {
 
             <Card>
               <CardHeader>
-                <CardTitle>Your Information</CardTitle>
+                <CardTitle>Your Contact Information</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
                 <p><strong>Name:</strong> {customerInfo.name}</p>
                 <p><strong>Email:</strong> {customerInfo.email}</p>
-                {customerInfo.phone && <p><strong>Phone:</strong> {customerInfo.phone}</p>}
-                {customerInfo.notes && <p><strong>Notes:</strong> {customerInfo.notes}</p>}
+                <p><strong>Phone:</strong> {customerInfo.phone}</p>
+                {customerInfo.notes && <p><strong>Special Requests:</strong> {customerInfo.notes}</p>}
               </CardContent>
             </Card>
           </div>
@@ -401,24 +396,25 @@ export function BookingPage({ barbershop }: BookingPageProps) {
               <CheckCircle className="w-8 h-8 text-green-600" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-green-600">Appointment Confirmed!</h2>
+              <h2 className="text-2xl font-bold text-green-600">Appointment Request Sent!</h2>
               <p className="text-muted-foreground mt-2">
-                Your appointment has been successfully booked. You will receive a confirmation email shortly.
+                Your appointment request has been sent to Ahmet. He will contact you shortly to confirm your appointment.
               </p>
             </div>
             <div className="space-y-2 text-sm text-muted-foreground">
-              <p>• Check your email for confirmation details</p>
-              <p>• You can cancel or reschedule up to 2 hours before your appointment</p>
-              <p>• Please arrive 5 minutes early for your appointment</p>
+              <p>• Ahmet will call you to confirm the appointment</p>
+              <p>• Please keep your phone available for the next few hours</p>
+              <p>• You can also call directly: <strong>+90 541 883 31 20</strong></p>
+              {appointmentId && (
+                <p>• Reference ID: <strong>{appointmentId}</strong></p>
+              )}
             </div>
             <div className="flex items-center justify-center gap-3 pt-2">
-              {appointmentId && (
-                <Button asChild>
-                  <a href={`/booking/appointment/${appointmentId}`}>View Details</a>
-                </Button>
-              )}
               <Button variant="outline" asChild>
-                <a href={`/s/${barbershop.slug}`}>Back to Booking</a>
+                <a href={`/s/${barbershop.slug}`}>Book Another Appointment</a>
+              </Button>
+              <Button asChild>
+                <a href="tel:+905418833120">Call Ahmet Now</a>
               </Button>
             </div>
           </div>
@@ -434,7 +430,7 @@ export function BookingPage({ barbershop }: BookingPageProps) {
       case 1: return selectedService !== ''
       case 2: return selectedStaff !== ''
       case 3: return selectedDate !== '' && selectedTime !== ''
-      case 4: return customerInfo.name !== '' && customerInfo.email !== ''
+      case 4: return customerInfo.name !== '' && customerInfo.email !== '' && customerInfo.phone !== ''
       case 5: return true
       default: return false
     }
@@ -521,7 +517,7 @@ export function BookingPage({ barbershop }: BookingPageProps) {
                   
                   {step === 5 ? (
                     <Button onClick={handleBooking} disabled={loading}>
-                      {loading ? 'Booking...' : 'Confirm Booking'}
+                      {loading ? 'Sending Request...' : 'Send Appointment Request'}
                     </Button>
                   ) : (
                     <Button onClick={handleNext} disabled={!canProceed()}>

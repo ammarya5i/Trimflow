@@ -44,19 +44,14 @@ export function Navbar() {
           ))}
         </nav>
         <div className="flex items-center space-x-2">
-          {!session?.user ? (
+          <Button asChild>
+            <Link href="/s/salon-ahmet-barbers">Book Appointment</Link>
+          </Button>
+          {/* Only show admin access for Ahmet */}
+          {session?.user?.email === 'ahmet@salonahmetbarbers.com' && (
             <>
               <Button variant="ghost" asChild>
-                <Link href="/auth/signin">Sign In</Link>
-              </Button>
-              <Button asChild>
-                <Link href="/s/salon-ahmet-barbers">Book Now</Link>
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button variant="ghost" asChild>
-                <Link href="/dashboard">Dashboard</Link>
+                <Link href="/dashboard">Admin Dashboard</Link>
               </Button>
               <Button variant="outline" onClick={() => signOut({ callbackUrl: '/' })}>Sign Out</Button>
             </>
