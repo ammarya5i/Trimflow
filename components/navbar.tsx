@@ -56,6 +56,13 @@ export function Navbar() {
               <Button variant="outline" onClick={() => signOut({ callbackUrl: '/' })}>Sign Out</Button>
             </>
           )}
+          
+          {/* Show sign in for Ahmet only */}
+          {!session?.user && (
+            <Button variant="ghost" asChild>
+              <Link href="/auth/signin">Admin Login</Link>
+            </Button>
+          )}
         </div>
       </div>
     </header>

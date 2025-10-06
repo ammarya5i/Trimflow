@@ -12,12 +12,30 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials: { email?: string; password?: string } | undefined) {
         if (!credentials?.email) return null
         
-        // Return user object for demo - in production, validate against database
-        return {
-          id: credentials.email,
-          email: credentials.email,
-          name: credentials.email.split('@')[0],
+        // Ahmet's admin account - simple password for now
+        if (credentials.email === 'ahmet@salonahmetbarbers.com') {
+          // For now, any password works for Ahmet (in production, use proper password hashing)
+          if (credentials.password && credentials.password.length >= 6) {
+            return {
+              id: 'ahmet-owner-id',
+              email: 'ahmet@salonahmetbarbers.com',
+              name: 'Ahmet Usta',
+              role: 'admin',
+            }
+          }
         }
+        
+        // For other users, create customer accounts (no password required)
+        if (credentials.email && credentials.email !== 'ahmet@salonahmetbarbers.com') {
+          return {
+            id: `customer-${Date.now()}`,
+            email: credentials.email,
+            name: credentials.email.split('@')[0],
+            role: 'customer',
+          }
+        }
+        
+        return null
       }
     }),
   ],
@@ -27,6 +45,7 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.sub
         session.user.email = token.email as string
         session.user.name = token.name as string
+        session.user.role = token.role as string
       }
       return session
     },
@@ -35,6 +54,7 @@ export const authOptions: NextAuthOptions = {
         token.sub = user.id
         token.email = user.email
         token.name = user.name
+        token.role = user.role
       }
       return token
     },
