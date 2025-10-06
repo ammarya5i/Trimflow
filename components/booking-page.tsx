@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from '@/hooks/use-toast'
-import { formatCurrency, formatDate } from '@/lib/utils'
+import { formatCurrency, formatDate, isValidEmail, isValidPhone } from '@/lib/utils'
 import { Calendar, Clock, User, Phone, Mail, MapPin, Star, CheckCircle } from 'lucide-react'
 
 import { BarbershopWithDetails } from '@/types'
@@ -32,6 +32,7 @@ export function BookingPage({ barbershop }: BookingPageProps) {
   })
   const [availableSlots, setAvailableSlots] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
+  const [loadingSlots, setLoadingSlots] = useState(false)
 
   const steps = [
     { id: 1, title: 'Select Service', description: 'Choose your service' },
@@ -68,16 +69,42 @@ export function BookingPage({ barbershop }: BookingPageProps) {
   const loadAvailableSlots = async (date: string, staffId: string, serviceId: string) => {
     if (!date || !staffId || !serviceId) return
 
-    // Generate simple time slots for the day (9:00 AM to 11:45 PM)
-    const slots = []
-    for (let hour = 9; hour <= 23; hour++) {
-      for (let minute = 0; minute < 60; minute += 30) {
-        if (hour === 23 && minute > 45) break // Stop at 11:45 PM
-        const timeString = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`
-        slots.push(timeString)
+    setLoadingSlots(true)
+    try {
+      const response = await fetch(
+        `/api/booking/availability?date=${date}&staffId=${staffId}&serviceId=${serviceId}&barbershopId=${barbershop.id}`
+      )
+      
+      if (response.ok) {
+        const data = await response.json()
+        setAvailableSlots(data.availableSlots || [])
+      } else {
+        // Fallback to basic time slots if API fails
+        const slots = []
+        for (let hour = 9; hour <= 23; hour++) {
+          for (let minute = 0; minute < 60; minute += 30) {
+            if (hour === 23 && minute > 45) break // Stop at 11:45 PM
+            const timeString = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`
+            slots.push(timeString)
+          }
+        }
+        setAvailableSlots(slots)
       }
+    } catch (error) {
+      console.error('Error loading available slots:', error)
+      // Fallback to basic time slots
+      const slots = []
+      for (let hour = 9; hour <= 23; hour++) {
+        for (let minute = 0; minute < 60; minute += 30) {
+          if (hour === 23 && minute > 45) break // Stop at 11:45 PM
+          const timeString = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`
+          slots.push(timeString)
+        }
+      }
+      setAvailableSlots(slots)
+    } finally {
+      setLoadingSlots(false)
     }
-    setAvailableSlots(slots)
   }
 
   useEffect(() => {
@@ -99,41 +126,62 @@ export function BookingPage({ barbershop }: BookingPageProps) {
   }
 
   const handleBooking = async () => {
+    // Validate all required fields
     if (!selectedService || !selectedStaff || !selectedDate || !selectedTime || !customerInfo.name || !customerInfo.email || !customerInfo.phone) {
       toast({ title: 'Please complete all required fields', variant: 'destructive' })
       return
     }
 
+    // Validate email format
+    if (!isValidEmail(customerInfo.email)) {
+      toast({ title: 'Please enter a valid email address', variant: 'destructive' })
+      return
+    }
+
+    // Validate phone format
+    if (!isValidPhone(customerInfo.phone)) {
+      toast({ title: 'Please enter a valid phone number', variant: 'destructive' })
+      return
+    }
+
     setLoading(true)
     try {
-      // Send appointment request to Ahmet (salon owner)
-      const appointmentData = {
-        barbershopId: barbershop.id,
-        serviceId: selectedService,
-        staffId: selectedStaff,
-        date: selectedDate,
-        time: selectedTime,
-        customerInfo,
-        status: 'pending', // Ahmet will confirm
-        createdAt: new Date().toISOString(),
+      // Create appointment via API
+      const response = await fetch('/api/booking/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          barbershopId: barbershop.id,
+          serviceId: selectedService,
+          staffId: selectedStaff,
+          date: selectedDate,
+          time: selectedTime,
+          customerInfo,
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to create appointment')
       }
 
-      // For now, we'll simulate sending this to Ahmet
-      // In a real implementation, this would send an email/SMS to Ahmet
-      console.log('Appointment request sent to Ahmet:', appointmentData)
-      
-      // Generate a simple appointment ID for reference
-      const appointmentId = `APT-${Date.now()}`
-      setAppointmentId(appointmentId)
+      const result = await response.json()
+      setAppointmentId(result.appointmentId)
       
       toast({ 
-        title: 'Appointment request sent!', 
-        description: 'Ahmet will contact you shortly to confirm your appointment.' 
+        title: 'Appointment created successfully!', 
+        description: 'Your appointment has been scheduled. You will receive a confirmation shortly.' 
       })
       setStep(6) // Success step
     } catch (error) {
-      console.error('Error sending appointment request:', error)
-      toast({ title: 'Failed to send appointment request. Please try again.', variant: 'destructive' })
+      console.error('Error creating appointment:', error)
+      toast({ 
+        title: 'Failed to create appointment', 
+        description: error instanceof Error ? error.message : 'Please try again.',
+        variant: 'destructive' 
+      })
     } finally {
       setLoading(false)
     }
@@ -244,22 +292,31 @@ export function BookingPage({ barbershop }: BookingPageProps) {
             {selectedDate && (
               <div>
                 <Label className="text-base font-medium mb-3 block">Select Time</Label>
-                <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
-                  {availableSlots.map((slot) => (
-                    <Button
-                      key={slot}
-                      variant={selectedTime === slot ? 'default' : 'outline'}
-                      className="h-10"
-                      onClick={() => setSelectedTime(slot)}
-                    >
-                      {slot}
-                    </Button>
-                  ))}
-                </div>
-                {availableSlots.length === 0 && (
-                  <p className="text-muted-foreground text-center py-4">
-                    No available slots for this date and staff member.
-                  </p>
+                {loadingSlots ? (
+                  <div className="text-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+                    <p className="text-muted-foreground mt-2">Loading available times...</p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
+                      {availableSlots.map((slot) => (
+                        <Button
+                          key={slot}
+                          variant={selectedTime === slot ? 'default' : 'outline'}
+                          className="h-10"
+                          onClick={() => setSelectedTime(slot)}
+                        >
+                          {slot}
+                        </Button>
+                      ))}
+                    </div>
+                    {availableSlots.length === 0 && (
+                      <p className="text-muted-foreground text-center py-4">
+                        No available slots for this date and staff member.
+                      </p>
+                    )}
+                  </>
                 )}
               </div>
             )}

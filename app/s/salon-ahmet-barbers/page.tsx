@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from '@/hooks/use-toast'
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency, isValidEmail, isValidPhone } from '@/lib/utils'
 import { Calendar, Clock, User, Phone, Mail, MapPin, Star, CheckCircle } from 'lucide-react'
 
 export default function SalonAhmetBarbersBooking() {
@@ -24,47 +24,129 @@ export default function SalonAhmetBarbersBooking() {
     notes: '',
   })
   const [loading, setLoading] = useState(false)
+  const [loadingSlots, setLoadingSlots] = useState(false)
   const [appointmentId, setAppointmentId] = useState('')
 
   const services = [
-    { id: 'service-1', name: 'Model Saç Kesimi', price: 20000, duration: 45, description: 'Professional model haircut with styling' },
-    { id: 'service-2', name: 'Sakal Kesimi & Şekillendirme', price: 15000, duration: 30, description: 'Beard cutting and professional styling' },
-    { id: 'service-3', name: 'Komple Bakım', price: 35000, duration: 60, description: 'Complete grooming package - hair + beard + facial care' },
-    { id: 'service-4', name: 'Tıraş & Yüz Bakımı', price: 18000, duration: 40, description: 'Traditional shave with facial care' },
-    { id: 'service-5', name: 'Saç Boyama', price: 25000, duration: 90, description: 'Professional hair coloring service' },
+    { id: 'service-1', name: 'Model Saç Kesimi', price: 20000, duration: 45, description: 'Professional model haircut with modern styling techniques' },
+    { id: 'service-2', name: 'Sakal Kesimi & Şekillendirme', price: 15000, duration: 30, description: 'Beard cutting and professional styling with hot towel treatment' },
+    { id: 'service-3', name: 'Komple Bakım', price: 35000, duration: 60, description: 'Complete grooming package - hair + beard + facial care (Most Popular)' },
+    { id: 'service-4', name: 'Tıraş & Yüz Bakımı', price: 18000, duration: 40, description: 'Traditional shave with facial care and hot towel treatment' },
+    { id: 'service-5', name: 'Saç Boyama', price: 25000, duration: 90, description: 'Professional hair coloring service with premium products' },
+    { id: 'service-6', name: 'Doğal Kalıcı Saç Düzleştirici (KRİSTAL&BOTOX)', price: 40000, duration: 120, description: 'Natural permanent hair straightening with Krystal & Botox treatment' },
+    { id: 'service-7', name: 'Profesyonel Yüz Bakımları', price: 30000, duration: 60, description: 'Professional facial care and skincare treatments' },
+    { id: 'service-8', name: 'Kaş Boyama', price: 8000, duration: 30, description: 'Eyebrow tinting and shaping service' },
   ]
 
   const staff = [
-    { id: 'staff-1', name: 'Ahmet Usta', bio: 'Master barber with 15+ years of experience' },
-    { id: 'staff-2', name: 'Mehmet Usta', bio: 'Specialist in modern cuts and fades' },
+    { id: 'staff-1', name: 'Ahmet Usta', bio: 'Master barber and salon owner with 15+ years of experience in traditional Turkish barbering and modern techniques' },
+    { id: 'staff-2', name: 'Mehmet Usta', bio: 'Specialist in modern cuts, fades, and contemporary styling' },
+    { id: 'staff-3', name: 'Can Usta', bio: 'Expert in beard grooming, luxury treatments, and hair coloring' },
   ]
 
-  const timeSlots = [
-    '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30',
-    '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30',
-    '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30',
-    '21:00', '21:30', '22:00', '22:30', '23:00', '23:30'
-  ]
+  const [availableTimeSlots, setAvailableTimeSlots] = useState<string[]>([])
+  
+  const loadAvailableSlots = async (date: string, staffId: string, serviceId: string) => {
+    if (!date || !staffId || !serviceId) return
+
+    setLoadingSlots(true)
+    try {
+      const response = await fetch(
+        `/api/booking/availability?date=${date}&staffId=${staffId}&serviceId=${serviceId}&barbershopId=salon-ahmet-id`
+      )
+      
+      if (response.ok) {
+        const data = await response.json()
+        setAvailableTimeSlots(data.availableSlots || [])
+      } else {
+        // Fallback to basic time slots if API fails
+        const slots = [
+          '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30',
+          '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30',
+          '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30',
+          '21:00', '21:30', '22:00', '22:30', '23:00', '23:30'
+        ]
+        setAvailableTimeSlots(slots)
+      }
+    } catch (error) {
+      console.error('Error loading available slots:', error)
+      // Fallback to basic time slots
+      const slots = [
+        '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30',
+        '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30',
+        '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30',
+        '21:00', '21:30', '22:00', '22:30', '23:00', '23:30'
+      ]
+      setAvailableTimeSlots(slots)
+    } finally {
+      setLoadingSlots(false)
+    }
+  }
+
+  // Load available slots when date, staff, or service changes
+  useEffect(() => {
+    if (selectedDate && selectedStaff && selectedService) {
+      loadAvailableSlots(selectedDate, selectedStaff, selectedService)
+    }
+  }, [selectedDate, selectedStaff, selectedService])
 
   const handleBooking = async () => {
+    // Validate all required fields
     if (!selectedService || !selectedStaff || !selectedDate || !selectedTime || !customerInfo.name || !customerInfo.email || !customerInfo.phone) {
       toast({ title: 'Please complete all required fields', variant: 'destructive' })
       return
     }
 
+    // Validate email format
+    if (!isValidEmail(customerInfo.email)) {
+      toast({ title: 'Please enter a valid email address', variant: 'destructive' })
+      return
+    }
+
+    // Validate phone format
+    if (!isValidPhone(customerInfo.phone)) {
+      toast({ title: 'Please enter a valid phone number', variant: 'destructive' })
+      return
+    }
+
     setLoading(true)
     try {
-      // Simulate sending appointment request to Ahmet
-      const appointmentId = `APT-${Date.now()}`
-      setAppointmentId(appointmentId)
+      // Create appointment via API
+      const response = await fetch('/api/booking/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          barbershopId: 'salon-ahmet-id',
+          serviceId: selectedService,
+          staffId: selectedStaff,
+          date: selectedDate,
+          time: selectedTime,
+          customerInfo,
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to create appointment')
+      }
+
+      const result = await response.json()
+      setAppointmentId(result.appointmentId)
       
       toast({ 
         title: 'Appointment request sent!', 
-        description: 'Ahmet will contact you shortly to confirm your appointment.' 
+        description: 'Ahmet will contact you within 2 hours to confirm your appointment. Please keep your phone available.' 
       })
       setStep(6) // Success step
     } catch (error) {
-      toast({ title: 'Failed to send appointment request. Please try again.', variant: 'destructive' })
+      console.error('Error creating appointment:', error)
+      toast({ 
+        title: 'Failed to send appointment request', 
+        description: error instanceof Error ? error.message : 'Please try again.',
+        variant: 'destructive' 
+      })
     } finally {
       setLoading(false)
     }
@@ -151,18 +233,25 @@ export default function SalonAhmetBarbersBooking() {
             {selectedDate && (
               <div>
                 <Label className="text-base font-medium mb-3 block">Select Time</Label>
-                <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
-                  {timeSlots.map((slot) => (
-                    <Button
-                      key={slot}
-                      variant={selectedTime === slot ? 'default' : 'outline'}
-                      className="h-10"
-                      onClick={() => setSelectedTime(slot)}
-                    >
-                      {slot}
-                    </Button>
-                  ))}
-                </div>
+                {loadingSlots ? (
+                  <div className="text-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+                    <p className="text-muted-foreground mt-2">Loading available times...</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
+                    {availableTimeSlots.map((slot) => (
+                      <Button
+                        key={slot}
+                        variant={selectedTime === slot ? 'default' : 'outline'}
+                        className="h-10"
+                        onClick={() => setSelectedTime(slot)}
+                      >
+                        {slot}
+                      </Button>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -311,6 +400,17 @@ export default function SalonAhmetBarbersBooking() {
                 <p>• Reference ID: <strong>{appointmentId}</strong></p>
               )}
             </div>
+            
+            {/* Business Policies */}
+            <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg text-left max-w-md mx-auto">
+              <h4 className="font-semibold text-blue-900 mb-2">Important Information:</h4>
+              <ul className="text-sm text-blue-800 space-y-1">
+                <li>• <strong>Cancellation:</strong> Please cancel at least 2 hours before your appointment</li>
+                <li>• <strong>Payment:</strong> Cash or card payment accepted at the salon</li>
+                <li>• <strong>Arrival:</strong> Please arrive 5 minutes early for your appointment</li>
+                <li>• <strong>Location:</strong> Mecidiyeköy, Şht. Er Cihan Namlı Cd No:9 D:2B</li>
+              </ul>
+            </div>
             <div className="flex items-center justify-center gap-3 pt-2">
               <Button variant="outline" onClick={() => window.location.reload()}>
                 Book Another Appointment
@@ -339,11 +439,11 @@ export default function SalonAhmetBarbersBooking() {
   }
 
   const steps = [
-    { id: 1, title: 'Select Service', description: 'Choose your service' },
-    { id: 2, title: 'Select Staff', description: 'Pick your barber' },
-    { id: 3, title: 'Select Date & Time', description: 'Choose your appointment' },
-    { id: 4, title: 'Your Details', description: 'Enter your information' },
-    { id: 5, title: 'Confirmation', description: 'Review and confirm' },
+    { id: 1, title: 'Hizmet Seçin', description: 'Hizmetinizi seçin' },
+    { id: 2, title: 'Berber Seçin', description: 'Berberinizi seçin' },
+    { id: 3, title: 'Tarih & Saat', description: 'Randevu tarihini seçin' },
+    { id: 4, title: 'Bilgileriniz', description: 'Bilgilerinizi girin' },
+    { id: 5, title: 'Onay', description: 'Gözden geçirin ve onaylayın' },
   ]
 
   return (
@@ -361,10 +461,19 @@ export default function SalonAhmetBarbersBooking() {
                 <p className="text-sm text-muted-foreground">Book an appointment</p>
               </div>
             </div>
-            <div className="flex items-center space-x-3 text-sm text-muted-foreground">
-              <MapPin className="w-4 h-4" />
-              <span>Mecidiyeköy, Şişli, Istanbul</span>
-              <a href="tel:+905418833120" className="hover:text-foreground">Call</a>
+            <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+              <div className="flex items-center space-x-1">
+                <MapPin className="w-4 h-4" />
+                <span>Mecidiyeköy, Şişli</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <Phone className="w-4 h-4" />
+                <a href="tel:+905418833120" className="hover:text-foreground font-medium">+90 541 883 31 20</a>
+              </div>
+              <div className="flex items-center space-x-1">
+                <Star className="w-4 h-4 text-yellow-500" />
+                <span className="font-medium">4.9 (608+ reviews)</span>
+              </div>
             </div>
           </div>
         </div>
