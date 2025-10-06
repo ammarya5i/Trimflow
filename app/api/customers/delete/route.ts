@@ -18,10 +18,10 @@ export async function POST(request: NextRequest) {
     }
 
     await prisma.customer.delete({ where: { id } })
-    return NextResponse.redirect('/dashboard/customers', 302)
+    return NextResponse.json({ success: true, message: 'Customer deleted successfully' })
   } catch (error) {
     console.error('Error deleting customer:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to delete customer' }, { status: 500 })
   }
 }
 

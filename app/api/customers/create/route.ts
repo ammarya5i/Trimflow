@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    return NextResponse.redirect(`/dashboard/customers`, 302)
+    return NextResponse.json({ success: true, message: 'Customer added successfully', customer })
   } catch (error) {
     console.error('Error creating customer:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
