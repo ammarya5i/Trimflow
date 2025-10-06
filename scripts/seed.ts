@@ -383,8 +383,9 @@ async function seedDatabase() {
     }
 
     console.log('✅ Database seeded successfully!')
-    console.log(`📱 Ahmet Salon: https://ahmetsalon.vercel.app/s/ahmet-salon`)
-    console.log(`👤 Owner login: ahmet@ahmetsalon.com`)
+    console.log(`📱 Salon Ahmet Barbers: https://salonahmetbarbers.vercel.app/s/salon-ahmet-barbers`)
+    console.log(`👤 Owner login: ahmet@salonahmetbarbers.com`)
+    console.log(`📄 Schema file: schema.sql`)
 
   } catch (error) {
     console.error('❌ Error seeding database:', error)
