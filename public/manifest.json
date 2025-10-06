@@ -1,11 +1,11 @@
 {
-  "name": "TrimFlow - Barber Appointment Management",
-  "short_name": "TrimFlow",
-  "description": "Professional barber appointment booking and management system",
+  "name": "Salon Ahmet Barbers - Premium Barbershop Mecidiyeköy",
+  "short_name": "Salon Ahmet Barbers",
+  "description": "Experience premium grooming services in Mecidiyeköy, Istanbul. Book your appointment online at Salon Ahmet Barbers. 4.9-star rating from 608+ customers.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#3b82f6",
+  "theme_color": "#f59e0b",
   "orientation": "portrait-primary",
   "icons": [
     {
@@ -21,8 +21,8 @@
       "purpose": "maskable any"
     }
   ],
-  "categories": ["business", "productivity", "utilities"],
-  "lang": "en",
+  "categories": ["business", "lifestyle", "beauty"],
+  "lang": "tr",
   "dir": "ltr",
   "scope": "/",
   "prefer_related_applications": false

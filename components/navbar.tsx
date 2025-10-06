@@ -12,7 +12,9 @@ export function Navbar() {
 
   const navLinks = [
     { href: '/', label: 'Home' },
-    { href: '/s', label: 'Find a Barbershop' },
+    { href: '#services', label: 'Services' },
+    { href: '#features', label: 'About' },
+    { href: '#testimonials', label: 'Reviews' },
   ]
 
   const isDashboard = pathname?.startsWith('/dashboard')
@@ -23,9 +25,9 @@ export function Navbar() {
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         <Link href="/" className="flex items-center space-x-2">
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-lg">T</span>
+            <span className="text-primary-foreground font-bold text-lg">A</span>
           </div>
-          <span className="text-xl font-bold">TrimFlow</span>
+          <span className="text-xl font-bold">Salon Ahmet Barbers</span>
         </Link>
         <nav className="hidden md:flex items-center space-x-6">
           {navLinks.map((link) => (
@@ -48,7 +50,7 @@ export function Navbar() {
                 <Link href="/auth/signin">Sign In</Link>
               </Button>
               <Button asChild>
-                <Link href="/#get-started">Get Started</Link>
+                <Link href="/s/salon-ahmet-barbers">Book Now</Link>
               </Button>
             </>
           ) : (

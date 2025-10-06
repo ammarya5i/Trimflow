@@ -7,36 +7,36 @@ async function seedDatabase() {
   console.log('🌱 Starting database seed...')
 
   try {
-    // Create demo barbershop owner
+    // Create Ahmet Salon owner
     const owner = await prisma.user.upsert({
-      where: { email: 'demo@trimflow.com' },
+      where: { email: 'ahmet@ahmetsalon.com' },
       update: {},
       create: {
-        email: 'demo@trimflow.com',
-        name: 'Demo Owner',
+        email: 'ahmet@ahmetsalon.com',
+        name: 'Ahmet Salon',
         onboardingCompleted: true,
         subscriptionPlan: 'PRO',
         subscriptionStatus: 'active',
       },
     })
 
-    // Create demo barbershop
+    // Create Ahmet Salon barbershop
     const barbershop = await prisma.barbershop.upsert({
-      where: { slug: 'berber-ali' },
+      where: { slug: 'ahmet-salon' },
       update: {},
       create: {
         ownerId: owner.id,
-        name: 'Berber Ali',
-        slug: 'berber-ali',
-        description: 'Professional barbershop offering modern cuts and traditional services',
-        address: '123 Main Street',
+        name: 'Ahmet Salon',
+        slug: 'ahmet-salon',
+        description: 'Istanbul\'s premier barbershop for traditional and modern grooming services. Experience the perfect blend of Turkish barbering heritage and contemporary style.',
+        address: 'Nişantaşı Mahallesi, Teşvikiye Caddesi No: 45',
         city: 'Istanbul',
         state: 'Istanbul',
-        zipCode: '34000',
+        zipCode: '34365',
         country: 'TR',
-        phone: '+90 212 555 0123',
-        email: 'info@berberali.com',
-        website: 'https://berberali.com',
+        phone: '+90 212 123 45 67',
+        email: 'info@ahmetsalon.com',
+        website: 'https://ahmetsalon.com',
         timezone: 'Europe/Istanbul',
         currency: 'TRY',
         language: 'tr',
@@ -49,19 +49,19 @@ async function seedDatabase() {
       where: { 
         barbershopId_name: {
           barbershopId: barbershop.id,
-          name: 'Ali Demir'
+          name: 'Ahmet Usta'
         }
       },
       update: {},
       create: {
         barbershopId: barbershop.id,
         userId: owner.id,
-        name: 'Ali Demir',
-        email: 'ali@berberali.com',
-        phone: '+90 212 555 0123',
+        name: 'Ahmet Usta',
+        email: 'ahmet@ahmetsalon.com',
+        phone: '+90 212 123 45 67',
         role: 'admin',
-        bio: 'Master barber with 15 years of experience',
-        specialties: ['Classic Cuts', 'Beard Styling', 'Hair Coloring'],
+        bio: 'Master barber with 20 years of experience in traditional Turkish barbering and modern techniques',
+        specialties: ['Classic Turkish Cuts', 'Beard Styling', 'Hot Towel Shaves', 'Traditional Services'],
         isActive: true,
       },
     })
@@ -70,18 +70,18 @@ async function seedDatabase() {
       where: { 
         barbershopId_name: {
           barbershopId: barbershop.id,
-          name: 'Mehmet Yılmaz'
+          name: 'Mehmet Usta'
         }
       },
       update: {},
       create: {
         barbershopId: barbershop.id,
-        name: 'Mehmet Yılmaz',
-        email: 'mehmet@berberali.com',
-        phone: '+90 212 555 0124',
+        name: 'Mehmet Usta',
+        email: 'mehmet@ahmetsalon.com',
+        phone: '+90 212 123 45 68',
         role: 'barber',
-        bio: 'Specialist in modern cuts and fades',
-        specialties: ['Fade Cuts', 'Modern Styles', 'Hair Washing'],
+        bio: 'Specialist in modern cuts, fades, and contemporary styling',
+        specialties: ['Fade Cuts', 'Modern Styles', 'Hair Washing', 'Styling'],
         isActive: true,
       },
     })
@@ -90,18 +90,18 @@ async function seedDatabase() {
       where: { 
         barbershopId_name: {
           barbershopId: barbershop.id,
-          name: 'Ayşe Kaya'
+          name: 'Can Usta'
         }
       },
       update: {},
       create: {
         barbershopId: barbershop.id,
-        name: 'Ayşe Kaya',
-        email: 'ayse@berberali.com',
-        phone: '+90 212 555 0125',
-        role: 'reception',
-        bio: 'Friendly receptionist and customer service specialist',
-        specialties: ['Customer Service', 'Appointment Management'],
+        name: 'Can Usta',
+        email: 'can@ahmetsalon.com',
+        phone: '+90 212 123 45 69',
+        role: 'barber',
+        bio: 'Expert in beard grooming and luxury treatments',
+        specialties: ['Beard Grooming', 'Luxury Treatments', 'Face Massage', 'Premium Services'],
         isActive: true,
       },
     })
@@ -111,17 +111,17 @@ async function seedDatabase() {
       where: { 
         barbershopId_name: {
           barbershopId: barbershop.id,
-          name: 'Saç Kesimi'
+          name: 'Classic Cut'
         }
       },
       update: {},
       create: {
         barbershopId: barbershop.id,
-        name: 'Saç Kesimi',
-        description: 'Profesyonel saç kesimi',
+        name: 'Classic Cut',
+        description: 'Traditional Turkish barbering with professional haircut, beard trim, hot towel treatment, hair wash, and styling',
         duration: 30,
-        price: 5000, // 50 TRY in kuruş
-        category: 'Hair',
+        price: 15000, // 150 TRY in kuruş
+        category: 'Classic',
         isActive: true,
       },
     })
@@ -130,17 +130,17 @@ async function seedDatabase() {
       where: { 
         barbershopId_name: {
           barbershopId: barbershop.id,
-          name: 'Sakal Tıraşı'
+          name: 'Premium Cut'
         }
       },
       update: {},
       create: {
         barbershopId: barbershop.id,
-        name: 'Sakal Tıraşı',
-        description: 'Sakal düzeltme ve şekillendirme',
-        duration: 20,
-        price: 3000, // 30 TRY in kuruş
-        category: 'Beard',
+        name: 'Premium Cut',
+        description: 'Our most popular service with premium haircut, beard styling, hot towel shave, hair wash & conditioning, professional styling, face massage, and aftercare consultation',
+        duration: 45,
+        price: 25000, // 250 TRY in kuruş
+        category: 'Premium',
         isActive: true,
       },
     })
@@ -149,17 +149,17 @@ async function seedDatabase() {
       where: { 
         barbershopId_name: {
           barbershopId: barbershop.id,
-          name: 'Saç + Sakal'
+          name: 'Luxury Experience'
         }
       },
       update: {},
       create: {
         barbershopId: barbershop.id,
-        name: 'Saç + Sakal',
-        description: 'Komple bakım hizmeti',
-        duration: 45,
-        price: 7000, // 70 TRY in kuruş
-        category: 'Complete',
+        name: 'Luxury Experience',
+        description: 'Complete grooming package with everything in Premium plus full beard treatment, eyebrow trimming, nose hair trimming, premium products, extended massage, and complimentary refreshments',
+        duration: 60,
+        price: 40000, // 400 TRY in kuruş
+        category: 'Luxury',
         isActive: true,
       },
     })
@@ -168,17 +168,17 @@ async function seedDatabase() {
       where: { 
         barbershopId_name: {
           barbershopId: barbershop.id,
-          name: 'Saç Yıkama'
+          name: 'Beard Trim & Style'
         }
       },
       update: {},
       create: {
         barbershopId: barbershop.id,
-        name: 'Saç Yıkama',
-        description: 'Profesyonel saç yıkama ve bakım',
-        duration: 15,
-        price: 2000, // 20 TRY in kuruş
-        category: 'Hair Care',
+        name: 'Beard Trim & Style',
+        description: 'Professional beard trimming, shaping, and styling with hot towel treatment',
+        duration: 25,
+        price: 8000, // 80 TRY in kuruş
+        category: 'Beard',
         isActive: true,
       },
     })
@@ -187,46 +187,38 @@ async function seedDatabase() {
       where: { 
         barbershopId_name: {
           barbershopId: barbershop.id,
-          name: 'Fade Kesim'
+          name: 'Hot Towel Shave'
         }
       },
       update: {},
       create: {
         barbershopId: barbershop.id,
-        name: 'Fade Kesim',
-        description: 'Modern fade kesim',
-        duration: 40,
-        price: 6000, // 60 TRY in kuruş
-        category: 'Modern',
+        name: 'Hot Towel Shave',
+        description: 'Traditional Turkish hot towel shave with premium products and face massage',
+        duration: 35,
+        price: 12000, // 120 TRY in kuruş
+        category: 'Traditional',
         isActive: true,
       },
     })
 
     // Create working hours
     const workingHoursData = [
-      // Monday to Friday: 9:00 - 18:00
-      ...Array.from({ length: 5 }, (_, i) => ({
+      // Monday to Saturday: 9:00 - 20:00
+      ...Array.from({ length: 6 }, (_, i) => ({
         barbershopId: barbershop.id,
-        dayOfWeek: i + 1, // Monday = 1, Friday = 5
+        dayOfWeek: i + 1, // Monday = 1, Saturday = 6
         startTime: '09:00',
-        endTime: '18:00',
+        endTime: '20:00',
         isWorking: true,
       })),
-      // Saturday: 9:00 - 16:00
-      {
-        barbershopId: barbershop.id,
-        dayOfWeek: 6, // Saturday
-        startTime: '09:00',
-        endTime: '16:00',
-        isWorking: true,
-      },
-      // Sunday: Closed
+      // Sunday: 10:00 - 18:00
       {
         barbershopId: barbershop.id,
         dayOfWeek: 0, // Sunday
-        startTime: '09:00',
+        startTime: '10:00',
         endTime: '18:00',
-        isWorking: false,
+        isWorking: true,
       },
     ]
 
@@ -391,8 +383,8 @@ async function seedDatabase() {
     }
 
     console.log('✅ Database seeded successfully!')
-    console.log(`📱 Demo barbershop: https://trimflow.vercel.app/s/berber-ali`)
-    console.log(`👤 Demo login: demo@trimflow.com`)
+    console.log(`📱 Ahmet Salon: https://ahmetsalon.vercel.app/s/ahmet-salon`)
+    console.log(`👤 Owner login: ahmet@ahmetsalon.com`)
 
   } catch (error) {
     console.error('❌ Error seeding database:', error)

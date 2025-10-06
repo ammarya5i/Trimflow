@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -11,7 +11,7 @@ import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 
-export default function SignInPage() {
+function SignInForm() {
   const searchParams = useSearchParams()
   const isSignup = searchParams.get('signup') === '1'
   const [email, setEmail] = useState('')
@@ -60,17 +60,17 @@ export default function SignInPage() {
           </Button>
           <div className="flex items-center space-x-2 mb-4">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">T</span>
+              <span className="text-primary-foreground font-bold text-lg">A</span>
             </div>
-            <span className="text-xl font-bold">TrimFlow</span>
+            <span className="text-xl font-bold">Salon Ahmet Barbers</span>
           </div>
         </div>
 
         <Card>
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl">{isSignup ? 'Create your account' : 'Welcome back'}</CardTitle>
+            <CardTitle className="text-2xl">{isSignup ? 'Book Your Appointment' : 'Welcome back'}</CardTitle>
             <CardDescription>
-              {isSignup ? 'Enter your details to get started' : 'Sign in to your TrimFlow account'}
+              {isSignup ? 'Enter your details to book an appointment' : 'Sign in to manage your appointments'}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -97,7 +97,7 @@ export default function SignInPage() {
                 />
               </div>
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? (isSignup ? 'Creating...' : 'Signing in...') : (isSignup ? 'Continue' : 'Sign In')}
+                {isLoading ? (isSignup ? 'Booking...' : 'Signing in...') : (isSignup ? 'Book Appointment' : 'Sign In')}
               </Button>
             </form>
             <div className="mt-6 text-center text-sm text-muted-foreground">
@@ -110,9 +110,9 @@ export default function SignInPage() {
                 </>
               ) : (
                 <>
-                  Don't have an account?{' '}
+                  New customer?{' '}
                   <Link href="/auth/signin?signup=1" className="text-primary hover:underline">
-                    Sign up here
+                    Book your first appointment
                   </Link>
                 </>
               )}
@@ -121,5 +121,13 @@ export default function SignInPage() {
         </Card>
       </div>
     </div>
+  )
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SignInForm />
+    </Suspense>
   )
 }

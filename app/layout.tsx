@@ -9,31 +9,31 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'TrimFlow - Barber Appointment Management',
-  description: 'Professional barber appointment booking and management system',
-  keywords: ['barber', 'appointment', 'booking', 'management', 'scheduling'],
-  authors: [{ name: 'TrimFlow Team' }],
-  creator: 'TrimFlow',
-  publisher: 'TrimFlow',
+  title: 'Salon Ahmet Barbers - Premium Barbershop in Mecidiyeköy, Istanbul',
+  description: 'Experience premium grooming services in Mecidiyeköy, Istanbul. Book your appointment online at Salon Ahmet Barbers. 4.9-star rating from 608+ customers.',
+  keywords: ['barbershop', 'mecidiyeköy', 'istanbul', 'haircut', 'beard trim', 'shave', 'grooming', 'turkish barber', 'salon ahmet barbers'],
+  authors: [{ name: 'Salon Ahmet Barbers' }],
+  creator: 'Salon Ahmet Barbers',
+  publisher: 'Salon Ahmet Barbers',
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://trimflow.vercel.app'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://salonahmetbarbers.vercel.app'),
   openGraph: {
     type: 'website',
-    locale: 'en_US',
-    url: 'https://trimflow.vercel.app',
-    title: 'TrimFlow - Barber Appointment Management',
-    description: 'Professional barber appointment booking and management system',
-    siteName: 'TrimFlow',
+    locale: 'tr_TR',
+    url: 'https://salonahmetbarbers.vercel.app',
+    title: 'Salon Ahmet Barbers - Premium Barbershop in Mecidiyeköy, Istanbul',
+    description: 'Experience premium grooming services in Mecidiyeköy, Istanbul. Book your appointment online at Salon Ahmet Barbers.',
+    siteName: 'Salon Ahmet Barbers',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'TrimFlow - Barber Appointment Management',
-    description: 'Professional barber appointment booking and management system',
-    creator: '@trimflow',
+    title: 'Salon Ahmet Barbers - Premium Barbershop in Mecidiyeköy, Istanbul',
+    description: 'Experience premium grooming services in Mecidiyeköy, Istanbul. Book your appointment online at Salon Ahmet Barbers.',
+    creator: '@salonahmetbarbers',
   },
   robots: {
     index: true,
@@ -64,20 +64,20 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <meta name="theme-color" content="#3b82f6" />
+        <meta name="theme-color" content="#f59e0b" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="TrimFlow" />
-        <meta name="msapplication-TileColor" content="#3b82f6" />
+        <meta name="apple-mobile-web-app-title" content="Salon Ahmet Barbers" />
+        <meta name="msapplication-TileColor" content="#f59e0b" />
         <meta name="msapplication-config" content="/browserconfig.xml" />
       </head>
       <body className={inter.className}>
         <AuthSessionProvider>
           <ThemeProvider
             attribute="class"
-            defaultTheme="dark"
+            defaultTheme="theme-barbershop"
             enableSystem={false}
-            themes={['dark','light','theme-ocean','theme-amber']}
+            themes={['theme-barbershop','theme-barbershop-dark','light','dark']}
             disableTransitionOnChange
           >
             <Navbar />

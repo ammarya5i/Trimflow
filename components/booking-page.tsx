@@ -448,7 +448,7 @@ export function BookingPage({ barbershop }: BookingPageProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-lg">T</span>
+                <span className="text-primary-foreground font-bold text-lg">A</span>
               </div>
               <div>
                 <h1 className="text-xl font-bold">{barbershop.name}</h1>

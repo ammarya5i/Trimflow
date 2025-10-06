@@ -214,75 +214,80 @@ CREATE TRIGGER update_working_hours_updated_at BEFORE UPDATE ON "WorkingHours" F
 CREATE TRIGGER update_customer_updated_at BEFORE UPDATE ON "Customer" FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_appointment_updated_at BEFORE UPDATE ON "Appointment" FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
--- Insert demo data
+-- Insert Ahmet Salon data
 INSERT INTO "User" ("id", "email", "name", "onboardingCompleted", "subscriptionPlan", "subscriptionStatus") 
-VALUES ('demo-user-id', 'demo@trimflow.com', 'Demo Owner', true, 'PRO', 'active')
+VALUES ('ahmet-salon-user-id', 'ahmet@ahmetsalon.com', 'Ahmet Salon', true, 'PRO', 'active')
 ON CONFLICT ("email") DO NOTHING;
 
 INSERT INTO "Barbershop" ("id", "ownerId", "name", "slug", "description", "address", "city", "state", "zipCode", "country", "phone", "email", "website", "timezone", "currency", "language", "isActive")
-VALUES ('demo-barbershop-id', 'demo-user-id', 'Berber Ali', 'berber-ali', 'Professional barbershop offering modern cuts and traditional services', '123 Main Street', 'Istanbul', 'Istanbul', '34000', 'TR', '+90 212 555 0123', 'info@berberali.com', 'https://berberali.com', 'Europe/Istanbul', 'TRY', 'tr', true)
+VALUES ('ahmet-salon-id', 'ahmet-salon-user-id', 'Ahmet Salon', 'ahmet-salon', 'Istanbul''s premier barbershop for traditional and modern grooming services. Experience the perfect blend of Turkish barbering heritage and contemporary style.', 'Nişantaşı Mahallesi, Teşvikiye Caddesi No: 45', 'Istanbul', 'Istanbul', '34365', 'TR', '+90 212 123 45 67', 'info@ahmetsalon.com', 'https://ahmetsalon.com', 'Europe/Istanbul', 'TRY', 'tr', true)
 ON CONFLICT ("slug") DO NOTHING;
 
--- Insert demo services
+-- Insert Ahmet Salon services
 INSERT INTO "Service" ("id", "barbershopId", "name", "description", "duration", "price", "category", "isActive")
 VALUES 
-    ('service-1', 'demo-barbershop-id', 'Saç Kesimi', 'Profesyonel saç kesimi', 30, 5000, 'Hair', true),
-    ('service-2', 'demo-barbershop-id', 'Sakal Tıraşı', 'Sakal düzeltme ve şekillendirme', 20, 3000, 'Beard', true),
-    ('service-3', 'demo-barbershop-id', 'Saç + Sakal', 'Komple bakım hizmeti', 45, 7000, 'Complete', true),
-    ('service-4', 'demo-barbershop-id', 'Saç Yıkama', 'Profesyonel saç yıkama ve bakım', 15, 2000, 'Hair Care', true),
-    ('service-5', 'demo-barbershop-id', 'Fade Kesim', 'Modern fade kesim', 40, 6000, 'Modern', true)
+    ('service-1', 'ahmet-salon-id', 'Classic Cut', 'Traditional Turkish barbering with professional haircut, beard trim, hot towel treatment, hair wash, and styling', 30, 15000, 'Classic', true),
+    ('service-2', 'ahmet-salon-id', 'Premium Cut', 'Our most popular service with premium haircut, beard styling, hot towel shave, hair wash & conditioning, professional styling, face massage, and aftercare consultation', 45, 25000, 'Premium', true),
+    ('service-3', 'ahmet-salon-id', 'Luxury Experience', 'Complete grooming package with everything in Premium plus full beard treatment, eyebrow trimming, nose hair trimming, premium products, extended massage, and complimentary refreshments', 60, 40000, 'Luxury', true),
+    ('service-4', 'ahmet-salon-id', 'Beard Trim & Style', 'Professional beard trimming, shaping, and styling with hot towel treatment', 25, 8000, 'Beard', true),
+    ('service-5', 'ahmet-salon-id', 'Hot Towel Shave', 'Traditional Turkish hot towel shave with premium products and face massage', 35, 12000, 'Traditional', true)
 ON CONFLICT DO NOTHING;
 
--- Insert demo staff
+-- Insert Ahmet Salon staff
 INSERT INTO "Staff" ("id", "barbershopId", "userId", "name", "email", "phone", "role", "bio", "specialties", "isActive")
 VALUES 
-    ('staff-1', 'demo-barbershop-id', 'demo-user-id', 'Ali Demir', 'ali@berberali.com', '+90 212 555 0123', 'admin', 'Master barber with 15 years of experience', ARRAY['Classic Cuts', 'Beard Styling', 'Hair Coloring'], true),
-    ('staff-2', 'demo-barbershop-id', NULL, 'Mehmet Yılmaz', 'mehmet@berberali.com', '+90 212 555 0124', 'barber', 'Specialist in modern cuts and fades', ARRAY['Fade Cuts', 'Modern Styles', 'Hair Washing'], true),
-    ('staff-3', 'demo-barbershop-id', NULL, 'Ayşe Kaya', 'ayse@berberali.com', '+90 212 555 0125', 'reception', 'Friendly receptionist and customer service specialist', ARRAY['Customer Service', 'Appointment Management'], true)
+    ('staff-1', 'ahmet-salon-id', 'ahmet-salon-user-id', 'Ahmet Usta', 'ahmet@ahmetsalon.com', '+90 212 123 45 67', 'admin', 'Master barber with 20 years of experience in traditional Turkish barbering and modern techniques', ARRAY['Classic Turkish Cuts', 'Beard Styling', 'Hot Towel Shaves', 'Traditional Services'], true),
+    ('staff-2', 'ahmet-salon-id', NULL, 'Mehmet Usta', 'mehmet@ahmetsalon.com', '+90 212 123 45 68', 'barber', 'Specialist in modern cuts, fades, and contemporary styling', ARRAY['Fade Cuts', 'Modern Styles', 'Hair Washing', 'Styling'], true),
+    ('staff-3', 'ahmet-salon-id', NULL, 'Can Usta', 'can@ahmetsalon.com', '+90 212 123 45 69', 'barber', 'Expert in beard grooming and luxury treatments', ARRAY['Beard Grooming', 'Luxury Treatments', 'Face Massage', 'Premium Services'], true)
 ON CONFLICT DO NOTHING;
 
--- Insert working hours (Monday to Saturday)
+-- Insert Ahmet Salon working hours (Monday to Saturday: 9:00-20:00, Sunday: 10:00-18:00)
 INSERT INTO "WorkingHours" ("id", "barbershopId", "dayOfWeek", "startTime", "endTime", "isWorking")
 VALUES 
-    ('wh-1', 'demo-barbershop-id', 1, '09:00', '18:00', true), -- Monday
-    ('wh-2', 'demo-barbershop-id', 2, '09:00', '18:00', true), -- Tuesday
-    ('wh-3', 'demo-barbershop-id', 3, '09:00', '18:00', true), -- Wednesday
-    ('wh-4', 'demo-barbershop-id', 4, '09:00', '18:00', true), -- Thursday
-    ('wh-5', 'demo-barbershop-id', 5, '09:00', '18:00', true), -- Friday
-    ('wh-6', 'demo-barbershop-id', 6, '09:00', '16:00', true), -- Saturday
-    ('wh-7', 'demo-barbershop-id', 0, '09:00', '18:00', false) -- Sunday (closed)
+    ('wh-1', 'ahmet-salon-id', 1, '09:00', '20:00', true), -- Monday
+    ('wh-2', 'ahmet-salon-id', 2, '09:00', '20:00', true), -- Tuesday
+    ('wh-3', 'ahmet-salon-id', 3, '09:00', '20:00', true), -- Wednesday
+    ('wh-4', 'ahmet-salon-id', 4, '09:00', '20:00', true), -- Thursday
+    ('wh-5', 'ahmet-salon-id', 5, '09:00', '20:00', true), -- Friday
+    ('wh-6', 'ahmet-salon-id', 6, '09:00', '20:00', true), -- Saturday
+    ('wh-7', 'ahmet-salon-id', 0, '10:00', '18:00', true) -- Sunday
 ON CONFLICT ("barbershopId", "dayOfWeek") DO NOTHING;
 
--- Insert demo customers
+-- Insert Ahmet Salon customers
 INSERT INTO "Customer" ("id", "barbershopId", "name", "email", "phone", "dateOfBirth", "notes")
 VALUES 
-    ('customer-1', 'demo-barbershop-id', 'Ahmet Yılmaz', 'ahmet@example.com', '+90 212 555 0101', '1985-03-15', 'Prefers short cuts, allergic to certain products'),
-    ('customer-2', 'demo-barbershop-id', 'Mehmet Özkan', 'mehmet@example.com', '+90 212 555 0102', '1990-07-22', 'Regular customer, likes beard styling'),
-    ('customer-3', 'demo-barbershop-id', 'Can Demir', 'can@example.com', '+90 212 555 0103', '1995-11-08', 'New customer, interested in modern styles')
+    ('customer-1', 'ahmet-salon-id', 'Mehmet Yılmaz', 'mehmet@example.com', '+90 212 555 0101', '1985-03-15', 'Regular customer, loves traditional Turkish barbering'),
+    ('customer-2', 'ahmet-salon-id', 'Ali Demir', 'ali@example.com', '+90 212 555 0102', '1990-07-22', 'Business owner, prefers premium services'),
+    ('customer-3', 'ahmet-salon-id', 'Can Özkan', 'can@example.com', '+90 212 555 0103', '1995-11-08', 'Local resident, interested in modern styles')
 ON CONFLICT DO NOTHING;
 
--- Insert demo appointments
+-- Insert Ahmet Salon appointments
 INSERT INTO "Appointment" ("id", "barbershopId", "customerId", "staffId", "serviceId", "startTime", "endTime", "duration", "status", "notes", "totalPrice", "paymentStatus", "paymentMethod")
 VALUES 
-    ('appointment-1', 'demo-barbershop-id', 'customer-1', 'staff-1', 'service-1', NOW() + INTERVAL '1 day', NOW() + INTERVAL '1 day' + INTERVAL '30 minutes', 30, 'scheduled', 'Regular haircut', 5000, 'pending', NULL),
-    ('appointment-2', 'demo-barbershop-id', 'customer-2', 'staff-2', 'service-3', NOW() + INTERVAL '2 days', NOW() + INTERVAL '2 days' + INTERVAL '45 minutes', 45, 'scheduled', 'Complete grooming service', 7000, 'pending', NULL),
-    ('appointment-3', 'demo-barbershop-id', 'customer-3', 'staff-1', 'service-5', NOW() - INTERVAL '2 hours', NOW() - INTERVAL '2 hours' + INTERVAL '40 minutes', 40, 'completed', 'Fade cut completed successfully', 6000, 'paid', 'cash')
+    ('appointment-1', 'ahmet-salon-id', 'customer-1', 'staff-1', 'service-1', NOW() + INTERVAL '1 day', NOW() + INTERVAL '1 day' + INTERVAL '30 minutes', 30, 'scheduled', 'Classic Turkish cut', 15000, 'pending', NULL),
+    ('appointment-2', 'ahmet-salon-id', 'customer-2', 'staff-2', 'service-2', NOW() + INTERVAL '2 days', NOW() + INTERVAL '2 days' + INTERVAL '45 minutes', 45, 'scheduled', 'Premium grooming service', 25000, 'pending', NULL),
+    ('appointment-3', 'ahmet-salon-id', 'customer-3', 'staff-1', 'service-5', NOW() - INTERVAL '2 hours', NOW() - INTERVAL '2 hours' + INTERVAL '35 minutes', 35, 'completed', 'Hot towel shave completed successfully', 12000, 'paid', 'cash')
 ON CONFLICT DO NOTHING;
 
--- Link staff to services
+-- Link Ahmet Salon staff to services
 INSERT INTO "StaffService" ("id", "staffId", "serviceId")
 VALUES 
-    -- Ali (admin) can do all services
+    -- Ahmet Usta (admin) can do all services
     ('ss-1', 'staff-1', 'service-1'),
     ('ss-2', 'staff-1', 'service-2'),
     ('ss-3', 'staff-1', 'service-3'),
     ('ss-4', 'staff-1', 'service-4'),
     ('ss-5', 'staff-1', 'service-5'),
-    -- Mehmet (barber) can do most services
+    -- Mehmet Usta (barber) can do most services
     ('ss-6', 'staff-2', 'service-1'),
     ('ss-7', 'staff-2', 'service-2'),
     ('ss-8', 'staff-2', 'service-3'),
-    ('ss-9', 'staff-2', 'service-4')
+    ('ss-9', 'staff-2', 'service-4'),
+    -- Can Usta (barber) specializes in luxury services
+    ('ss-10', 'staff-3', 'service-2'),
+    ('ss-11', 'staff-3', 'service-3'),
+    ('ss-12', 'staff-3', 'service-4'),
+    ('ss-13', 'staff-3', 'service-5')
 ON CONFLICT ("staffId", "serviceId") DO NOTHING;
 
 -- Grant necessary permissions (adjust as needed for your Neon setup)

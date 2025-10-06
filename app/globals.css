@@ -48,49 +48,50 @@
     --ring: 224.3 76.3% 94.1%;
   }
 
-  /* Additional modular themes */
-  .theme-ocean {
-    --background: 210 50% 8%;
-    --foreground: 210 40% 98%;
-    --card: 210 50% 10%;
-    --card-foreground: 210 40% 98%;
-    --popover: 210 50% 10%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 199 89% 48%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 30% 18%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 210 30% 18%;
-    --muted-foreground: 210 10% 70%;
-    --accent: 199 89% 48%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62% 35%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 210 30% 18%;
-    --input: 210 30% 18%;
-    --ring: 199 89% 48%;
+  /* Barbershop theme - inspired by modern barbershop aesthetic */
+  .theme-barbershop {
+    --background: 0 0% 100%;
+    --foreground: 20 14% 4%;
+    --card: 0 0% 100%;
+    --card-foreground: 20 14% 4%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14% 4%;
+    --primary: 25 95% 53%; /* Warm amber/gold - like barbershop lighting */
+    --primary-foreground: 20 14% 4%;
+    --secondary: 20 14% 96%;
+    --secondary-foreground: 20 14% 4%;
+    --muted: 20 14% 96%;
+    --muted-foreground: 20 5% 45%;
+    --accent: 25 95% 53%;
+    --accent-foreground: 20 14% 4%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 20 14% 90%;
+    --input: 20 14% 90%;
+    --ring: 25 95% 53%;
   }
 
-  .theme-amber {
-    --background: 30 20% 6%;
-    --foreground: 30 40% 98%;
-    --card: 30 20% 8%;
-    --card-foreground: 30 40% 98%;
-    --popover: 30 20% 8%;
-    --popover-foreground: 30 40% 98%;
-    --primary: 38 92% 50%;
-    --primary-foreground: 24 10% 10%;
-    --secondary: 30 25% 16%;
-    --secondary-foreground: 30 40% 98%;
-    --muted: 30 25% 16%;
-    --muted-foreground: 30 10% 70%;
-    --accent: 38 92% 50%;
-    --accent-foreground: 24 10% 10%;
-    --destructive: 0 62% 35%;
-    --destructive-foreground: 30 40% 98%;
-    --border: 30 25% 16%;
-    --input: 30 25% 16%;
-    --ring: 38 92% 50%;
+  /* Dark barbershop theme - for premium feel */
+  .theme-barbershop-dark {
+    --background: 20 14% 4%;
+    --foreground: 0 0% 98%;
+    --card: 20 14% 6%;
+    --card-foreground: 0 0% 98%;
+    --popover: 20 14% 6%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 25 95% 53%; /* Bright amber/gold accent */
+    --primary-foreground: 20 14% 4%;
+    --secondary: 20 14% 12%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 20 14% 12%;
+    --muted-foreground: 20 5% 65%;
+    --accent: 25 95% 53%;
+    --accent-foreground: 20 14% 4%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 20 14% 12%;
+    --input: 20 14% 12%;
+    --ring: 25 95% 53%;
   }
 }
 

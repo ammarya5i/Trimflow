@@ -35,105 +35,104 @@ export function LandingPage() {
   const features = [
     {
       icon: Calendar,
-      title: 'Smart Scheduling',
-      description: 'Drag-and-drop calendar with real-time availability and conflict detection.',
+      title: 'Online Booking',
+      description: 'Book your appointment 24/7 with our easy online scheduling system.',
     },
     {
       icon: Users,
-      title: 'Staff Management',
-      description: 'Manage your team with role-based permissions and performance tracking.',
+      title: 'Expert Barbers',
+      description: 'Professional barbers with years of experience in traditional and modern cuts.',
     },
     {
       icon: BarChart3,
-      title: 'Analytics & Reports',
-      description: 'Track revenue, customer trends, and staff performance with detailed reports.',
+      title: 'Premium Services',
+      description: 'Haircuts, beard trims, hot towel shaves, and luxury grooming treatments.',
     },
     {
       icon: Smartphone,
-      title: 'Mobile Ready',
-      description: 'PWA app that works offline and can be installed on any device.',
+      title: 'Mobile Friendly',
+      description: 'Book from anywhere with our mobile-optimized booking system.',
     },
     {
       icon: Globe,
-      title: 'Multi-language',
-      description: 'Support for Turkish, English, Arabic, and Russian languages.',
+      title: 'Mecidiyeköy Location',
+      description: 'Conveniently located in Mecidiyeköy, Şişli with easy access and parking.',
     },
     {
       icon: Shield,
-      title: 'GDPR Compliant',
-      description: 'Built with privacy and security in mind, fully GDPR compliant.',
+      title: 'Hygiene First',
+      description: 'Strict hygiene protocols and sanitized equipment for your safety.',
     },
   ]
 
-  const plans = [
+  const services = [
     {
-      name: 'Free',
-      price: '$0',
-      period: '/month',
-      description: 'Perfect for getting started',
+      name: 'Model Saç Kesimi',
+      price: '₺200',
+      period: '',
+      description: 'Professional model haircut',
       features: [
-        'Up to 50 appointments/month',
-        'Basic calendar view',
-        'Email notifications',
-        '1 staff member',
-        '5 services',
+        'Professional model haircut',
+        'Modern styling techniques',
+        'Hair wash & conditioning',
+        'Professional styling',
+        'Consultation included',
       ],
-      cta: 'Get Started',
+      cta: 'Book Now',
       popular: false,
     },
     {
-      name: 'Pro',
-      price: '$19',
-      period: '/month',
-      description: 'For growing barbershops',
+      name: 'Komple Bakım',
+      price: '₺350',
+      period: '',
+      description: 'Our most popular service',
       features: [
-        'Unlimited appointments',
-        'Advanced calendar',
-        'Staff management',
-        'Custom services',
-        'SMS notifications',
-        'Basic reporting',
-        'Customer portal',
+        'Complete hair & beard service',
+        'Professional facial care',
+        'Hot towel treatment',
+        'Hair wash & conditioning',
+        'Professional styling',
+        'Face massage',
+        'Premium products',
       ],
-      cta: 'Start Pro Trial',
+      cta: 'Book Now',
       popular: true,
     },
     {
-      name: 'Premium',
-      price: '$49',
-      period: '/month',
-      description: 'For established businesses',
+      name: 'Saç Boyama',
+      price: '₺250',
+      period: '',
+      description: 'Professional hair coloring',
       features: [
-        'Everything in Pro',
-        'Advanced analytics',
-        'Multi-location support',
-        'API access',
-        'Priority support',
-        'Custom branding',
-        'Advanced integrations',
+        'Professional hair coloring',
+        'Color consultation',
+        'Hair treatment',
+        'Styling included',
+        'Premium color products',
+        'Aftercare instructions',
       ],
-      cta: 'Start Premium Trial',
+      cta: 'Book Now',
       popular: false,
     },
   ]
 
   const testimonials = [
     {
-      name: 'Ahmed Hassan',
-      role: 'Owner, Modern Cuts',
-      content: 'TrimFlow transformed our booking process. We went from chaos to organized in just one week!',
+      name: 'Mehmet Yılmaz',
+      role: 'Regular Customer',
+      content: 'Salon Ahmet Barbers has been my go-to place for years. The quality is exceptional and the online booking makes it so convenient!',
       rating: 5,
     },
     {
-      name: 'Maria Rodriguez',
-      role: 'Manager, Elite Barbershop',
-      content: 'The analytics dashboard helps us understand our business better. Revenue increased by 30%!',
+      name: 'Ali Demir',
+      role: 'Business Owner',
+      content: 'The best barbershop in Mecidiyeköy. Professional service, clean environment, and the hot towel treatment is amazing.',
       rating: 5,
     },
     {
-      name: 'John Smith',
-      role: 'Barber, Classic Cuts',
-      content: 'My clients love the online booking. No more phone tag or missed appointments.',
+      name: 'Can Özkan',
+      role: 'Local Resident',
+      content: 'I love how easy it is to book online. Ahmet Usta and his team are skilled and the atmosphere is always welcoming.',
       rating: 5,
     },
   ]
@@ -145,12 +144,12 @@ export function LandingPage() {
       <section className="py-20 px-4">
         <div className="container mx-auto text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            The Future of{' '}
-            <span className="text-primary">Barber Booking</span>
+            Welcome to{' '}
+            <span className="text-primary">Salon Ahmet Barbers</span>
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Streamline your barbershop operations with our all-in-one appointment management platform. 
-            Built for modern barbers who value efficiency and customer experience.
+            Experience premium grooming services in Mecidiyeköy, Istanbul. 
+            Book your appointment online and discover why we have a 4.9-star rating from 608+ satisfied customers.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-md mx-auto">
             <form onSubmit={handleGetStarted} className="flex w-full gap-2">
@@ -178,10 +177,10 @@ export function LandingPage() {
         <div className="container mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Everything You Need to Run Your Barbershop
+              Why Choose Salon Ahmet Barbers?
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              From appointment scheduling to customer management, TrimFlow has all the tools you need.
+              Experience the perfect blend of traditional Turkish barbering and modern convenience in Mecidiyeköy, Istanbul.
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -204,21 +203,21 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section id="pricing" className="py-20 px-4">
+      {/* Services Section */}
+      <section id="services" className="py-20 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Simple, Transparent Pricing
+              Our Premium Services
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Choose the plan that fits your barbershop. Upgrade or downgrade anytime.
+              From classic cuts to luxury grooming experiences, we offer services for every need and budget.
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {plans.map((plan, index) => (
-              <Card key={index} className={`relative ${plan.popular ? 'border-primary shadow-lg scale-105' : ''}`}>
-                {plan.popular && (
+            {services.map((service, index) => (
+              <Card key={index} className={`relative ${service.popular ? 'border-primary shadow-lg scale-105' : ''}`}>
+                {service.popular && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                     <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-medium">
                       Most Popular
@@ -226,16 +225,16 @@ export function LandingPage() {
                   </div>
                 )}
                 <CardHeader className="text-center">
-                  <CardTitle className="text-2xl">{plan.name}</CardTitle>
+                  <CardTitle className="text-2xl">{service.name}</CardTitle>
                   <div className="mt-4">
-                    <span className="text-4xl font-bold">{plan.price}</span>
-                    <span className="text-muted-foreground">{plan.period}</span>
+                    <span className="text-4xl font-bold">{service.price}</span>
+                    <span className="text-muted-foreground">{service.period}</span>
                   </div>
-                  <CardDescription className="mt-2">{plan.description}</CardDescription>
+                  <CardDescription className="mt-2">{service.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-3 mb-6">
-                    {plan.features.map((feature, featureIndex) => (
+                    {service.features.map((feature, featureIndex) => (
                       <li key={featureIndex} className="flex items-center">
                         <CheckCircle className="w-5 h-5 text-primary mr-3 flex-shrink-0" />
                         <span>{feature}</span>
@@ -244,10 +243,10 @@ export function LandingPage() {
                   </ul>
                   <Button 
                     className="w-full" 
-                    variant={plan.popular ? 'default' : 'outline'}
+                    variant={service.popular ? 'default' : 'outline'}
                     asChild
                   >
-                    <Link href="#get-started">{plan.cta}</Link>
+                    <Link href="/s/salon-ahmet-barbers">{service.cta}</Link>
                   </Button>
                 </CardContent>
               </Card>
@@ -261,10 +260,10 @@ export function LandingPage() {
         <div className="container mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Loved by Barbers Worldwide
+              What Our Customers Say
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Join thousands of barbers who have transformed their business with TrimFlow.
+              Don't just take our word for it. Here's what our valued customers have to say about Ahmet Salon.
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
@@ -291,13 +290,13 @@ export function LandingPage() {
       {/* CTA Section */}
       <section id="get-started" className="py-20 px-4">
         <div className="container mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Ready to Transform Your Barbershop?
-          </h2>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Join thousands of barbers who have already made the switch to TrimFlow. 
-            Start your free trial today.
-          </p>
+           <h2 className="text-3xl md:text-4xl font-bold mb-4">
+             Book Your Appointment Today
+           </h2>
+           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+             Experience the finest grooming services in Mecidiyeköy, Istanbul. 
+             Book online now and discover why Salon Ahmet Barbers has a 4.9-star rating from 608+ customers.
+           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-md mx-auto">
             <form onSubmit={handleGetStarted} className="flex w-full gap-2">
               <Input
@@ -308,14 +307,14 @@ export function LandingPage() {
                 className="flex-1"
                 required
               />
-              <Button type="submit" disabled={isLoading} size="lg">
-                {isLoading ? 'Sending...' : 'Start Free Trial'}
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
+               <Button type="submit" disabled={isLoading} size="lg">
+                 {isLoading ? 'Sending...' : 'Book Appointment'}
+                 <ArrowRight className="w-4 h-4 ml-2" />
+               </Button>
             </form>
           </div>
           <p className="text-sm text-muted-foreground mt-4">
-            No credit card required • 14-day free trial • Cancel anytime
+            Easy online booking • Same-day appointments available • Cancel anytime
           </p>
         </div>
       </section>
@@ -325,43 +324,44 @@ export function LandingPage() {
         <div className="container mx-auto">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                  <span className="text-primary-foreground font-bold text-lg">T</span>
-                </div>
-                <span className="text-xl font-bold">TrimFlow</span>
-              </div>
-              <p className="text-muted-foreground">
-                The modern barber appointment management platform.
-              </p>
+               <div className="flex items-center space-x-2 mb-4">
+                 <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                   <span className="text-primary-foreground font-bold text-lg">A</span>
+                 </div>
+                 <span className="text-xl font-bold">Salon Ahmet Barbers</span>
+               </div>
+               <p className="text-muted-foreground">
+                 Mecidiyeköy's premier barbershop for traditional and modern grooming services. 4.9-star rating from 608+ customers.
+               </p>
             </div>
             <div>
-              <h3 className="font-semibold mb-4">Product</h3>
+              <h3 className="font-semibold mb-4">Services</h3>
               <ul className="space-y-2 text-muted-foreground">
-                <li><Link href="#features" className="hover:text-foreground">Features</Link></li>
-                <li><Link href="#pricing" className="hover:text-foreground">Pricing</Link></li>
-                <li><Link href="/s" className="hover:text-foreground">Demo</Link></li>
+                <li><Link href="#services" className="hover:text-foreground">Our Services</Link></li>
+                <li><Link href="#features" className="hover:text-foreground">Why Choose Us</Link></li>
+                <li><Link href="/s/salon-ahmet-barbers" className="hover:text-foreground">Book Now</Link></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold mb-4">Support</h3>
+              <h3 className="font-semibold mb-4">Contact</h3>
               <ul className="space-y-2 text-muted-foreground">
-                <li><Link href="#" className="hover:text-foreground">Help Center</Link></li>
-                <li><Link href="/#get-started" className="hover:text-foreground">Contact</Link></li>
-                <li><Link href="#" className="hover:text-foreground">Status</Link></li>
+                <li><Link href="tel:+905418833120" className="hover:text-foreground">+90 541 883 31 20</Link></li>
+                <li><Link href="mailto:info@salonahmetbarbers.com" className="hover:text-foreground">info@salonahmetbarbers.com</Link></li>
+                <li><Link href="https://www.instagram.com/salonahmetbarbers/" className="hover:text-foreground" target="_blank">Instagram</Link></li>
+                <li><Link href="#" className="hover:text-foreground">Mecidiyeköy, Şişli, Istanbul</Link></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold mb-4">Legal</h3>
+              <h3 className="font-semibold mb-4">Hours</h3>
               <ul className="space-y-2 text-muted-foreground">
-                <li><Link href="#" className="hover:text-foreground">Privacy</Link></li>
-                <li><Link href="#" className="hover:text-foreground">Terms</Link></li>
-                <li><Link href="#" className="hover:text-foreground">GDPR</Link></li>
+                <li>Every Day: 9:00-23:45</li>
+                <li>Open 7 days a week</li>
+                <li>Extended hours for your convenience</li>
               </ul>
             </div>
           </div>
           <div className="border-t mt-8 pt-8 text-center text-muted-foreground">
-            <p>&copy; 2024 TrimFlow. All rights reserved.</p>
+            <p>&copy; 2024 Salon Ahmet Barbers. All rights reserved.</p>
           </div>
         </div>
       </footer>
