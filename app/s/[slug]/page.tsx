@@ -1,5 +1,9 @@
+'use client'
+
 import { notFound } from 'next/navigation'
 import { BookingPage } from '@/components/booking-page'
+import { useParams } from 'next/navigation'
+import Head from 'next/head'
 
 interface BookingPageProps {
   params: {
@@ -105,23 +109,21 @@ const SALON_AHMET_DATA = {
   ],
 }
 
-export async function generateMetadata({ params }: BookingPageProps) {
-  if (params.slug !== 'salon-ahmet-barbers') {
-    return {
-      title: 'Barbershop Not Found',
-    }
-  }
+export default function BarbershopBookingPage() {
+  const params = useParams()
+  const slug = params.slug as string
 
-  return {
-    title: `Book Appointment - ${SALON_AHMET_DATA.name}`,
-    description: SALON_AHMET_DATA.description,
-  }
-}
-
-export default async function BarbershopBookingPage({ params }: BookingPageProps) {
-  if (params.slug !== 'salon-ahmet-barbers') {
+  if (slug !== 'salon-ahmet-barbers') {
     notFound()
   }
 
-  return <BookingPage barbershop={SALON_AHMET_DATA} />
+  return (
+    <>
+      <Head>
+        <title>Book Appointment - {SALON_AHMET_DATA.name}</title>
+        <meta name="description" content={SALON_AHMET_DATA.description} />
+      </Head>
+      <BookingPage barbershop={SALON_AHMET_DATA} />
+    </>
+  )
 }
