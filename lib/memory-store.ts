@@ -49,8 +49,60 @@ interface Service {
 }
 
 // In-memory storage
-let appointments: Appointment[] = []
-let customers: Customer[] = []
+let appointments: Appointment[] = [
+  {
+    id: 'apt-1',
+    barbershopId: 'salon-ahmet-id',
+    customerId: 'customer-1',
+    staffId: 'staff-1',
+    serviceId: 'service-1',
+    startTime: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // Tomorrow
+    endTime: new Date(Date.now() + 24 * 60 * 60 * 1000 + 45 * 60 * 1000).toISOString(), // Tomorrow + 45 minutes
+    duration: 45,
+    status: 'scheduled',
+    notes: 'First time customer',
+    totalPrice: 20000,
+    paymentStatus: 'pending',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: 'apt-2',
+    barbershopId: 'salon-ahmet-id',
+    customerId: 'customer-2',
+    staffId: 'staff-2',
+    serviceId: 'service-2',
+    startTime: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(), // Day after tomorrow
+    endTime: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000 + 30 * 60 * 1000).toISOString(), // Day after tomorrow + 30 minutes
+    duration: 30,
+    status: 'scheduled',
+    notes: null,
+    totalPrice: 15000,
+    paymentStatus: 'pending',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }
+]
+let customers: Customer[] = [
+  {
+    id: 'customer-1',
+    barbershopId: 'salon-ahmet-id',
+    name: 'Mehmet Yılmaz',
+    email: 'mehmet@example.com',
+    phone: '+90 532 123 45 67',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: 'customer-2',
+    barbershopId: 'salon-ahmet-id',
+    name: 'Ali Demir',
+    email: 'ali@example.com',
+    phone: '+90 533 987 65 43',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }
+]
 let staff: Staff[] = []
 let services: Service[] = []
 
@@ -211,5 +263,18 @@ export const memoryStore = {
           service: service ? { name: service.name, price: service.price } : null,
         }
       })
+  },
+
+  updateAppointment: (appointmentId: string, updates: Partial<Appointment>): Appointment | null => {
+    const appointmentIndex = appointments.findIndex(apt => apt.id === appointmentId)
+    if (appointmentIndex === -1) return null
+    
+    appointments[appointmentIndex] = {
+      ...appointments[appointmentIndex],
+      ...updates,
+      updatedAt: new Date(),
+    }
+    
+    return appointments[appointmentIndex]
   },
 }
