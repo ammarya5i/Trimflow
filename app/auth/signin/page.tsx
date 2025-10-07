@@ -43,8 +43,14 @@ function SignInForm() {
       }
 
       if (result?.ok) {
-        // Successful login, redirect manually
-        window.location.href = '/dashboard'
+        // Successful login, redirect based on user role
+        // Check if user is admin (Ahmet)
+        if (email === 'ahmet@salonahmetbarbers.com') {
+          window.location.href = '/dashboard'
+        } else {
+          // For customers, redirect to main page or booking page
+          window.location.href = '/'
+        }
       }
     } catch (error) {
       console.error('Sign in error:', error)
