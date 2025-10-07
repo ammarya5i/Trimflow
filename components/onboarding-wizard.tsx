@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { toast } from '@/hooks/use-toast'
+import { toast, toastError, toastSuccess } from '@/hooks/use-toast'
 import { generateSlug } from '@/lib/utils'
 import { 
   ChevronLeft, 
@@ -114,7 +114,6 @@ export function OnboardingWizard({ user }: OnboardingWizardProps) {
     state: '',
     zipCode: '',
     country: 'US',
-    phone: '',
     email: user?.email || '',
     website: '',
     
@@ -138,24 +137,24 @@ export function OnboardingWizard({ user }: OnboardingWizardProps) {
     // Basic validation per step
     if (currentStep === 1) {
       if (!formData.barbershopName?.trim()) {
-        toast.error('Barbershop name is required')
+        toastError('Barbershop name is required')
         return
       }
     }
     if (currentStep === 2) {
       if (!formData.fullName?.trim()) {
-        toast.error('Full name is required')
+        toastError('Full name is required')
         return
       }
       if (!formData.phone?.trim()) {
-        toast.error('Phone number is required')
+        toastError('Phone number is required')
         return
       }
     }
     if (currentStep === 3) {
       const validServices = formData.services.filter(s => s.name.trim() && s.duration > 0 && s.price >= 0)
       if (validServices.length === 0) {
-        toast.error('Add at least one valid service')
+        toastError('Add at least one valid service')
         return
       }
     }
@@ -215,7 +214,7 @@ export function OnboardingWizard({ user }: OnboardingWizardProps) {
     try {
       // Final validations
       if (!formData.barbershopName?.trim() || !formData.fullName?.trim()) {
-        toast.error('Please complete required fields')
+        toastError('Please complete required fields')
         setLoading(false)
         return
       }
@@ -234,11 +233,11 @@ export function OnboardingWizard({ user }: OnboardingWizardProps) {
         throw new Error('Failed to complete onboarding')
       }
 
-      toast.success('Welcome to TrimFlow! Your barbershop is ready.')
+      toastSuccess('Welcome to TrimFlow! Your barbershop is ready.')
       router.push('/dashboard')
     } catch (error) {
       console.error('Error completing onboarding:', error)
-      toast.error('Failed to complete setup. Please try again.')
+      toastError('Failed to complete setup. Please try again.')
     } finally {
       setLoading(false)
     }

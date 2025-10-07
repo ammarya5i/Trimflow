@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { signIn } from 'next-auth/react'
-import { toast } from '@/hooks/use-toast'
+import { toastError } from '@/hooks/use-toast'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
@@ -21,11 +21,11 @@ function SignInForm() {
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!email) {
-      toast.error('Email is required')
+      toastError('Email is required')
       return
     }
     if (!password || password.length < 6) {
-      toast.error('Password must be at least 6 characters')
+      toastError('Password must be at least 6 characters')
       return
     }
 
@@ -34,15 +34,21 @@ function SignInForm() {
       const result = await signIn('credentials', {
         email,
         password,
-        redirect: true,
+        redirect: false,
         callbackUrl: '/dashboard',
       })
 
-      if ((result as any)?.error) {
-        throw new Error((result as any).error)
+      if (result?.error) {
+        throw new Error(result.error)
+      }
+
+      if (result?.ok) {
+        // Successful login, redirect manually
+        window.location.href = '/dashboard'
       }
     } catch (error) {
-      toast.error('Failed to sign in. Please try again.')
+      console.error('Sign in error:', error)
+      toastError('Failed to sign in. Please check your credentials and try again.')
     } finally {
       setIsLoading(false)
     }

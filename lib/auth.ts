@@ -10,23 +10,34 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Password', type: 'password' }
       },
       async authorize(credentials: { email?: string; password?: string } | undefined) {
-        if (!credentials?.email) return null
+        console.log('Auth attempt:', { email: credentials?.email, hasPassword: !!credentials?.password })
+        
+        if (!credentials?.email) {
+          console.log('No email provided')
+          return null
+        }
         
         // Ahmet's admin account - simple password for now
         if (credentials.email === 'ahmet@salonahmetbarbers.com') {
+          console.log('Admin login attempt for Ahmet')
           // For now, any password works for Ahmet (in production, use proper password hashing)
           if (credentials.password && credentials.password.length >= 6) {
+            console.log('Admin login successful')
             return {
               id: 'ahmet-owner-id',
               email: 'ahmet@salonahmetbarbers.com',
               name: 'Ahmet Usta',
               role: 'admin',
             }
+          } else {
+            console.log('Admin password too short')
+            return null
           }
         }
         
         // For other users, create customer accounts (no password required)
         if (credentials.email && credentials.email !== 'ahmet@salonahmetbarbers.com') {
+          console.log('Customer login attempt')
           return {
             id: `customer-${Date.now()}`,
             email: credentials.email,
@@ -35,6 +46,7 @@ export const authOptions: NextAuthOptions = {
           }
         }
         
+        console.log('No matching user found')
         return null
       }
     }),
@@ -66,5 +78,5 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || 'fallback-secret-for-development',
 }

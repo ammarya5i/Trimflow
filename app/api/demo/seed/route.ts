@@ -152,15 +152,8 @@ export async function POST(request: NextRequest) {
     ]
 
     for (const hours of workingHoursData) {
-      await prisma.workingHours.upsert({
-        where: {
-          barbershopId_dayOfWeek: {
-            barbershopId: barbershop.id,
-            dayOfWeek: hours.dayOfWeek,
-          },
-        },
-        update: {},
-        create: hours,
+      await prisma.workingHours.create({
+        data: hours,
       })
     }
 

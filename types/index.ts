@@ -26,11 +26,76 @@ export interface AppointmentWithDetails extends Appointment {
   barbershop: Barbershop
 }
 
-export interface BarbershopWithDetails extends Barbershop {
-  staff: Staff[]
-  services: Service[]
-  workingHours: WorkingHours[]
-  working_hours?: WorkingHours[] // For backward compatibility
+// Prisma-generated types (camelCase)
+export interface PrismaBarbershop {
+  id: string
+  ownerId: string
+  name: string
+  slug: string
+  description: string | null
+  address: string | null
+  city: string | null
+  state: string | null
+  zipCode: string | null
+  country: string | null
+  phone: string | null
+  email: string | null
+  website: string | null
+  logoUrl: string | null
+  coverImageUrl: string | null
+  timezone: string
+  currency: string
+  language: string
+  isActive: boolean
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface PrismaStaff {
+  id: string
+  barbershopId: string
+  userId: string | null
+  name: string
+  email: string | null
+  phone: string | null
+  role: string
+  avatarUrl: string | null
+  bio: string | null
+  specialties: string[]
+  isActive: boolean
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface PrismaService {
+  id: string
+  barbershopId: string
+  name: string
+  description: string | null
+  duration: number
+  price: number
+  category: string | null
+  isActive: boolean
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface PrismaWorkingHours {
+  id: string
+  barbershopId: string
+  staffId: string | null
+  dayOfWeek: number
+  startTime: string
+  endTime: string
+  isWorking: boolean
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface BarbershopWithDetails extends PrismaBarbershop {
+  staff: PrismaStaff[]
+  services: PrismaService[]
+  workingHours: PrismaWorkingHours[]
 }
 
 export interface StaffWithDetails extends Staff {

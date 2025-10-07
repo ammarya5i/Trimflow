@@ -45,15 +45,8 @@ async function seedDatabase() {
     })
 
     // Create staff members
-    const staff1 = await prisma.staff.upsert({
-      where: { 
-        barbershopId_name: {
-          barbershopId: barbershop.id,
-          name: 'Ahmet Usta'
-        }
-      },
-      update: {},
-      create: {
+    const staff1 = await prisma.staff.create({
+      data: {
         barbershopId: barbershop.id,
         userId: owner.id,
         name: 'Ahmet Usta',
@@ -66,15 +59,8 @@ async function seedDatabase() {
       },
     })
 
-    const staff2 = await prisma.staff.upsert({
-      where: { 
-        barbershopId_name: {
-          barbershopId: barbershop.id,
-          name: 'Mehmet Usta'
-        }
-      },
-      update: {},
-      create: {
+    const staff2 = await prisma.staff.create({
+      data: {
         barbershopId: barbershop.id,
         name: 'Mehmet Usta',
         email: 'mehmet@ahmetsalon.com',
@@ -86,15 +72,8 @@ async function seedDatabase() {
       },
     })
 
-    const staff3 = await prisma.staff.upsert({
-      where: { 
-        barbershopId_name: {
-          barbershopId: barbershop.id,
-          name: 'Can Usta'
-        }
-      },
-      update: {},
-      create: {
+    const staff3 = await prisma.staff.create({
+      data: {
         barbershopId: barbershop.id,
         name: 'Can Usta',
         email: 'can@ahmetsalon.com',
@@ -107,15 +86,8 @@ async function seedDatabase() {
     })
 
     // Create services
-    const service1 = await prisma.service.upsert({
-      where: { 
-        barbershopId_name: {
-          barbershopId: barbershop.id,
-          name: 'Classic Cut'
-        }
-      },
-      update: {},
-      create: {
+    const service1 = await prisma.service.create({
+      data: {
         barbershopId: barbershop.id,
         name: 'Classic Cut',
         description: 'Traditional Turkish barbering with professional haircut, beard trim, hot towel treatment, hair wash, and styling',
@@ -126,15 +98,8 @@ async function seedDatabase() {
       },
     })
 
-    const service2 = await prisma.service.upsert({
-      where: { 
-        barbershopId_name: {
-          barbershopId: barbershop.id,
-          name: 'Premium Cut'
-        }
-      },
-      update: {},
-      create: {
+    const service2 = await prisma.service.create({
+      data: {
         barbershopId: barbershop.id,
         name: 'Premium Cut',
         description: 'Our most popular service with premium haircut, beard styling, hot towel shave, hair wash & conditioning, professional styling, face massage, and aftercare consultation',
@@ -145,15 +110,8 @@ async function seedDatabase() {
       },
     })
 
-    const service3 = await prisma.service.upsert({
-      where: { 
-        barbershopId_name: {
-          barbershopId: barbershop.id,
-          name: 'Luxury Experience'
-        }
-      },
-      update: {},
-      create: {
+    const service3 = await prisma.service.create({
+      data: {
         barbershopId: barbershop.id,
         name: 'Luxury Experience',
         description: 'Complete grooming package with everything in Premium plus full beard treatment, eyebrow trimming, nose hair trimming, premium products, extended massage, and complimentary refreshments',
@@ -164,15 +122,8 @@ async function seedDatabase() {
       },
     })
 
-    const service4 = await prisma.service.upsert({
-      where: { 
-        barbershopId_name: {
-          barbershopId: barbershop.id,
-          name: 'Beard Trim & Style'
-        }
-      },
-      update: {},
-      create: {
+    const service4 = await prisma.service.create({
+      data: {
         barbershopId: barbershop.id,
         name: 'Beard Trim & Style',
         description: 'Professional beard trimming, shaping, and styling with hot towel treatment',
@@ -183,15 +134,8 @@ async function seedDatabase() {
       },
     })
 
-    const service5 = await prisma.service.upsert({
-      where: { 
-        barbershopId_name: {
-          barbershopId: barbershop.id,
-          name: 'Hot Towel Shave'
-        }
-      },
-      update: {},
-      create: {
+    const service5 = await prisma.service.create({
+      data: {
         barbershopId: barbershop.id,
         name: 'Hot Towel Shave',
         description: 'Traditional Turkish hot towel shave with premium products and face massage',
@@ -223,28 +167,14 @@ async function seedDatabase() {
     ]
 
     for (const hours of workingHoursData) {
-      await prisma.workingHours.upsert({
-        where: {
-          barbershopId_dayOfWeek: {
-            barbershopId: barbershop.id,
-            dayOfWeek: hours.dayOfWeek,
-          },
-        },
-        update: {},
-        create: hours,
+      await prisma.workingHours.create({
+        data: hours,
       })
     }
 
     // Create sample customers
-    const customer1 = await prisma.customer.upsert({
-      where: { 
-        barbershopId_email: {
-          barbershopId: barbershop.id,
-          email: 'ahmet@example.com'
-        }
-      },
-      update: {},
-      create: {
+    const customer1 = await prisma.customer.create({
+      data: {
         barbershopId: barbershop.id,
         name: 'Ahmet Yılmaz',
         email: 'ahmet@example.com',
@@ -254,15 +184,8 @@ async function seedDatabase() {
       },
     })
 
-    const customer2 = await prisma.customer.upsert({
-      where: { 
-        barbershopId_email: {
-          barbershopId: barbershop.id,
-          email: 'mehmet@example.com'
-        }
-      },
-      update: {},
-      create: {
+    const customer2 = await prisma.customer.create({
+      data: {
         barbershopId: barbershop.id,
         name: 'Mehmet Özkan',
         email: 'mehmet@example.com',
@@ -272,15 +195,8 @@ async function seedDatabase() {
       },
     })
 
-    const customer3 = await prisma.customer.upsert({
-      where: { 
-        barbershopId_email: {
-          barbershopId: barbershop.id,
-          email: 'can@example.com'
-        }
-      },
-      update: {},
-      create: {
+    const customer3 = await prisma.customer.create({
+      data: {
         barbershopId: barbershop.id,
         name: 'Can Demir',
         email: 'can@example.com',
@@ -296,10 +212,8 @@ async function seedDatabase() {
     const dayAfterTomorrow = new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000)
     const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000)
 
-    await prisma.appointment.upsert({
-      where: { id: 'demo-appointment-1' },
-      update: {},
-      create: {
+    await prisma.appointment.create({
+      data: {
         id: 'demo-appointment-1',
         barbershopId: barbershop.id,
         customerId: customer1.id,
@@ -315,10 +229,8 @@ async function seedDatabase() {
       },
     })
 
-    await prisma.appointment.upsert({
-      where: { id: 'demo-appointment-2' },
-      update: {},
-      create: {
+    await prisma.appointment.create({
+      data: {
         id: 'demo-appointment-2',
         barbershopId: barbershop.id,
         customerId: customer2.id,
@@ -334,10 +246,8 @@ async function seedDatabase() {
       },
     })
 
-    await prisma.appointment.upsert({
-      where: { id: 'demo-appointment-3' },
-      update: {},
-      create: {
+    await prisma.appointment.create({
+      data: {
         id: 'demo-appointment-3',
         barbershopId: barbershop.id,
         customerId: customer3.id,
@@ -370,15 +280,8 @@ async function seedDatabase() {
     ]
 
     for (const staffService of staffServices) {
-      await prisma.staffService.upsert({
-        where: {
-          staffId_serviceId: {
-            staffId: staffService.staffId,
-            serviceId: staffService.serviceId,
-          },
-        },
-        update: {},
-        create: staffService,
+      await prisma.staffService.create({
+        data: staffService,
       })
     }
 

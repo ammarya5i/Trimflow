@@ -187,3 +187,19 @@ function useToast() {
 }
 
 export { useToast, toast }
+
+// Add convenience methods for common toast types
+export const toastError = (message: string) => {
+  return toast({
+    variant: "destructive",
+    title: "Error",
+    description: message,
+  })
+}
+
+export const toastSuccess = (message: string) => {
+  return toast({
+    title: "Success",
+    description: message,
+  })
+}
