@@ -116,8 +116,16 @@
     "today": "today",
     "completed": "completed",
     "activeCustomers": "Active customers",
-    "upcoming": "Upcoming",
-    "scheduledAppointments": "Scheduled appointments"
+          "upcoming": "Upcoming",
+          "scheduledAppointments": "Scheduled appointments",
+          "manageAppointments": "Manage your appointments and schedule",
+          "manageCustomers": "Manage your customer database",
+          "appointments": "appointments",
+          "noAppointments": "No appointments for this date",
+          "complete": "Complete",
+          "cancel": "Cancel",
+          "todayStats": "Today's Statistics",
+          "scheduled": "Scheduled"
   },
   "features": {
     "onlineBooking": "Online Booking",

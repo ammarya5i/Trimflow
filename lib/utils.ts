@@ -91,8 +91,17 @@ export function isValidEmail(email: string): boolean {
 }
 
 export function isValidPhone(phone: string): boolean {
-  const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/
-  return phoneRegex.test(phone.replace(/\s/g, ''))
+  // Remove all spaces, dashes, and parentheses
+  const cleaned = phone.replace(/[\s\-\(\)]/g, '')
+  
+  // Turkish phone number patterns:
+  // +90 5xx xxx xx xx (mobile)
+  // 0 5xx xxx xx xx (mobile with leading 0)
+  // +90 2xx xxx xx xx (landline)
+  // 0 2xx xxx xx xx (landline with leading 0)
+  const phoneRegex = /^(\+90|0)?[5][0-9]{9}$|^(\+90|0)?[2-4][0-9]{9}$/
+  
+  return phoneRegex.test(cleaned)
 }
 
 export function getTimeSlots(

@@ -116,8 +116,16 @@
     "today": "اليوم",
     "completed": "مكتمل",
     "activeCustomers": "العملاء النشطون",
-    "upcoming": "القادم",
-    "scheduledAppointments": "المواعيد المجدولة"
+          "upcoming": "القادم",
+          "scheduledAppointments": "المواعيد المجدولة",
+          "manageAppointments": "إدارة مواعيدك وجدولتها",
+          "manageCustomers": "إدارة قاعدة بيانات عملائك",
+          "appointments": "موعد",
+          "noAppointments": "لا توجد مواعيد لهذا التاريخ",
+          "complete": "إكمال",
+          "cancel": "إلغاء",
+          "todayStats": "إحصائيات اليوم",
+          "scheduled": "مجدول"
   },
   "features": {
     "onlineBooking": "الحجز الإلكتروني",

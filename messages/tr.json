@@ -116,8 +116,16 @@
     "today": "bugün",
     "completed": "tamamlandı",
     "activeCustomers": "Aktif müşteriler",
-    "upcoming": "Yaklaşan",
-    "scheduledAppointments": "Planlanmış randevular"
+          "upcoming": "Yaklaşan",
+          "scheduledAppointments": "Planlanmış randevular",
+          "manageAppointments": "Randevularınızı yönetin ve planlayın",
+          "manageCustomers": "Müşteri veritabanınızı yönetin",
+          "appointments": "randevu",
+          "noAppointments": "Bu tarih için randevu yok",
+          "complete": "Tamamla",
+          "cancel": "İptal Et",
+          "todayStats": "Bugünün İstatistikleri",
+          "scheduled": "Planlanmış"
   },
   "features": {
     "onlineBooking": "Online Randevu",

@@ -30,6 +30,10 @@ export function BookingPage({ barbershop }: BookingPageProps) {
     phone: '',
     notes: '',
   })
+  const [validationErrors, setValidationErrors] = useState({
+    email: '',
+    phone: '',
+  })
   const [availableSlots, setAvailableSlots] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
   const [loadingSlots, setLoadingSlots] = useState(false)
@@ -125,6 +129,32 @@ export function BookingPage({ barbershop }: BookingPageProps) {
     }
   }
 
+  const validateEmail = (email: string) => {
+    if (!email) return ''
+    if (!isValidEmail(email)) {
+      return 'Please enter a valid email address (e.g., user@example.com)'
+    }
+    return ''
+  }
+
+  const validatePhone = (phone: string) => {
+    if (!phone) return ''
+    if (!isValidPhone(phone)) {
+      return 'Please enter a valid phone number (e.g., +90 541 883 31 20 or 0541 883 31 20)'
+    }
+    return ''
+  }
+
+  const handleEmailChange = (email: string) => {
+    setCustomerInfo(prev => ({ ...prev, email }))
+    setValidationErrors(prev => ({ ...prev, email: validateEmail(email) }))
+  }
+
+  const handlePhoneChange = (phone: string) => {
+    setCustomerInfo(prev => ({ ...prev, phone }))
+    setValidationErrors(prev => ({ ...prev, phone: validatePhone(phone) }))
+  }
+
   const handleBooking = async () => {
     // Validate all required fields
     if (!selectedService || !selectedStaff || !selectedDate || !selectedTime || !customerInfo.name || !customerInfo.email || !customerInfo.phone) {
@@ -133,13 +163,17 @@ export function BookingPage({ barbershop }: BookingPageProps) {
     }
 
     // Validate email format
-    if (!isValidEmail(customerInfo.email)) {
+    const emailError = validateEmail(customerInfo.email)
+    if (emailError) {
+      setValidationErrors(prev => ({ ...prev, email: emailError }))
       toast({ title: 'Please enter a valid email address', variant: 'destructive' })
       return
     }
 
     // Validate phone format
-    if (!isValidPhone(customerInfo.phone)) {
+    const phoneError = validatePhone(customerInfo.phone)
+    if (phoneError) {
+      setValidationErrors(prev => ({ ...prev, phone: phoneError }))
       toast({ title: 'Please enter a valid phone number', variant: 'destructive' })
       return
     }
@@ -347,10 +381,14 @@ export function BookingPage({ barbershop }: BookingPageProps) {
                   id="email"
                   type="email"
                   value={customerInfo.email}
-                  onChange={(e) => setCustomerInfo(prev => ({ ...prev, email: e.target.value }))}
+                  onChange={(e) => handleEmailChange(e.target.value)}
                   placeholder="Enter your email address"
                   required
+                  className={validationErrors.email ? 'border-red-500' : ''}
                 />
+                {validationErrors.email && (
+                  <p className="text-sm text-red-500 mt-1">{validationErrors.email}</p>
+                )}
               </div>
               <div>
                 <Label htmlFor="phone">Phone Number *</Label>
@@ -358,10 +396,14 @@ export function BookingPage({ barbershop }: BookingPageProps) {
                   id="phone"
                   type="tel"
                   value={customerInfo.phone}
-                  onChange={(e) => setCustomerInfo(prev => ({ ...prev, phone: e.target.value }))}
-                  placeholder="Enter your phone number (Ahmet will call you)"
+                  onChange={(e) => handlePhoneChange(e.target.value)}
+                  placeholder="Enter your phone number (e.g., +90 541 883 31 20)"
                   required
+                  className={validationErrors.phone ? 'border-red-500' : ''}
                 />
+                {validationErrors.phone && (
+                  <p className="text-sm text-red-500 mt-1">{validationErrors.phone}</p>
+                )}
               </div>
               <div>
                 <Label htmlFor="notes">Special Requests or Notes</Label>
@@ -487,7 +529,12 @@ export function BookingPage({ barbershop }: BookingPageProps) {
       case 1: return selectedService !== ''
       case 2: return selectedStaff !== ''
       case 3: return selectedDate !== '' && selectedTime !== ''
-      case 4: return customerInfo.name !== '' && customerInfo.email !== '' && customerInfo.phone !== ''
+      case 4: 
+        return customerInfo.name !== '' && 
+               customerInfo.email !== '' && 
+               customerInfo.phone !== '' &&
+               !validationErrors.email &&
+               !validationErrors.phone
       case 5: return true
       default: return false
     }

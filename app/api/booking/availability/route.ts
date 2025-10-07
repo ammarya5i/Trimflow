@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { memoryStore } from '@/lib/memory-store'
 import { getTimeSlots, isTimeSlotAvailable } from '@/lib/utils'
 
 export async function GET(request: NextRequest) {
@@ -14,29 +15,18 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required parameters' }, { status: 400 })
     }
 
-    // Get service details - fallback to hardcoded services for Salon Ahmet
-    let service = await prisma.service.findFirst({
-      where: {
-        id: serviceId,
-        barbershopId,
-        isActive: true,
-      },
-    })
+    // Get service details from memory store
+    let service = memoryStore.getService(barbershopId, serviceId)
 
-    // Fallback to hardcoded services for Salon Ahmet Barbers
-    if (!service && barbershopId === 'salon-ahmet-id') {
-      const hardcodedServices = {
-        'service-1': { id: 'service-1', name: 'Model Saç Kesimi', price: 20000, duration: 45 },
-        'service-2': { id: 'service-2', name: 'Sakal Kesimi & Şekillendirme', price: 15000, duration: 30 },
-        'service-3': { id: 'service-3', name: 'Komple Bakım', price: 35000, duration: 60 },
-        'service-4': { id: 'service-4', name: 'Tıraş & Yüz Bakımı', price: 18000, duration: 40 },
-        'service-5': { id: 'service-5', name: 'Saç Boyama', price: 25000, duration: 90 },
-        'service-6': { id: 'service-6', name: 'Doğal Kalıcı Saç Düzleştirici', price: 40000, duration: 120 },
-        'service-7': { id: 'service-7', name: 'Profesyonel Yüz Bakımları', price: 30000, duration: 60 },
-        'service-8': { id: 'service-8', name: 'Kaş Boyama', price: 8000, duration: 30 },
-      }
-      
-      service = hardcodedServices[serviceId as keyof typeof hardcodedServices]
+    // Fallback to database for other barbershops
+    if (!service) {
+      service = await prisma.service.findFirst({
+        where: {
+          id: serviceId,
+          barbershopId,
+          isActive: true,
+        },
+      })
     }
 
     if (!service) {
@@ -79,8 +69,19 @@ export async function GET(request: NextRequest) {
       },
     })
 
-    // For Salon Ahmet Barbers, return basic time slots without database check
+    // For Salon Ahmet Barbers, check real appointments from memory store
     if (barbershopId === 'salon-ahmet-id') {
+      const appointments = memoryStore.getAppointments(barbershopId)
+      
+      // Filter appointments for the selected date and staff
+      const dayAppointments = appointments.filter(apt => {
+        const aptDate = new Date(apt.startTime)
+        const selectedDateObj = new Date(date)
+        return aptDate.toDateString() === selectedDateObj.toDateString() && 
+               apt.staffId === staffId &&
+               apt.status === 'scheduled'
+      })
+
       // Generate basic time slots (9:00 AM to 11:30 PM, 30-minute intervals)
       const slots = []
       for (let hour = 9; hour <= 23; hour++) {
@@ -90,8 +91,18 @@ export async function GET(request: NextRequest) {
           slots.push(timeString)
         }
       }
+
+      // Filter out occupied slots
+      const availableSlots = slots.filter(slot => {
+        const slotTime = new Date(`${date}T${slot}`)
+        return !dayAppointments.some(apt => {
+          const aptStart = new Date(apt.startTime)
+          const aptEnd = new Date(apt.endTime)
+          return slotTime >= aptStart && slotTime < aptEnd
+        })
+      })
       
-      return NextResponse.json({ availableSlots: slots })
+      return NextResponse.json({ availableSlots })
     }
 
     if (!workingHours) {
