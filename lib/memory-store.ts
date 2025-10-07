@@ -11,10 +11,11 @@ interface Appointment {
   endTime: string
   duration: number
   status: 'scheduled' | 'confirmed' | 'completed' | 'cancelled' | 'no_show'
-  notes?: string
+  notes?: string | null
   totalPrice: number
   paymentStatus: 'pending' | 'paid' | 'refunded'
   createdAt: string
+  updatedAt: string
 }
 
 interface Customer {
@@ -24,6 +25,7 @@ interface Customer {
   email: string
   phone: string
   createdAt: string
+  updatedAt: string
 }
 
 interface Staff {
@@ -35,6 +37,7 @@ interface Staff {
   role: string
   isActive: boolean
   createdAt: string
+  updatedAt: string
 }
 
 interface Service {
@@ -46,6 +49,7 @@ interface Service {
   duration: number
   isActive: boolean
   createdAt: string
+  updatedAt: string
 }
 
 // In-memory storage
@@ -63,8 +67,8 @@ let appointments: Appointment[] = [
     notes: 'First time customer',
     totalPrice: 20000,
     paymentStatus: 'pending',
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
   {
     id: 'apt-2',
@@ -79,8 +83,8 @@ let appointments: Appointment[] = [
     notes: null,
     totalPrice: 15000,
     paymentStatus: 'pending',
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   }
 ]
 let customers: Customer[] = [
@@ -90,8 +94,8 @@ let customers: Customer[] = [
     name: 'Mehmet Yılmaz',
     email: 'mehmet@example.com',
     phone: '+90 532 123 45 67',
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
   {
     id: 'customer-2',
@@ -99,8 +103,8 @@ let customers: Customer[] = [
     name: 'Ali Demir',
     email: 'ali@example.com',
     phone: '+90 533 987 65 43',
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   }
 ]
 let staff: Staff[] = []
@@ -111,14 +115,14 @@ const initializeSalonAhmetData = () => {
   if (services.length === 0) {
     // Add services
     const salonServices: Service[] = [
-      { id: 'service-1', barbershopId: 'salon-ahmet-id', name: 'Model Saç Kesimi', description: 'Professional model haircut with modern styling techniques', price: 20000, duration: 45, isActive: true, createdAt: new Date().toISOString() },
-      { id: 'service-2', barbershopId: 'salon-ahmet-id', name: 'Sakal Kesimi & Şekillendirme', description: 'Beard cutting and professional styling with hot towel treatment', price: 15000, duration: 30, isActive: true, createdAt: new Date().toISOString() },
-      { id: 'service-3', barbershopId: 'salon-ahmet-id', name: 'Komple Bakım', description: 'Complete grooming package - hair + beard + facial care', price: 35000, duration: 60, isActive: true, createdAt: new Date().toISOString() },
-      { id: 'service-4', barbershopId: 'salon-ahmet-id', name: 'Tıraş & Yüz Bakımı', description: 'Traditional shave with facial care and hot towel treatment', price: 18000, duration: 40, isActive: true, createdAt: new Date().toISOString() },
-      { id: 'service-5', barbershopId: 'salon-ahmet-id', name: 'Saç Boyama', description: 'Professional hair coloring service with premium products', price: 25000, duration: 90, isActive: true, createdAt: new Date().toISOString() },
-      { id: 'service-6', barbershopId: 'salon-ahmet-id', name: 'Doğal Kalıcı Saç Düzleştirici', description: 'Natural permanent hair straightening with Krystal & Botox treatment', price: 40000, duration: 120, isActive: true, createdAt: new Date().toISOString() },
-      { id: 'service-7', barbershopId: 'salon-ahmet-id', name: 'Profesyonel Yüz Bakımları', description: 'Professional facial care and skincare treatments', price: 30000, duration: 60, isActive: true, createdAt: new Date().toISOString() },
-      { id: 'service-8', barbershopId: 'salon-ahmet-id', name: 'Kaş Boyama', description: 'Eyebrow tinting and shaping service', price: 8000, duration: 30, isActive: true, createdAt: new Date().toISOString() },
+      { id: 'service-1', barbershopId: 'salon-ahmet-id', name: 'Model Saç Kesimi', description: 'Professional model haircut with modern styling techniques', price: 20000, duration: 45, isActive: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+      { id: 'service-2', barbershopId: 'salon-ahmet-id', name: 'Sakal Kesimi & Şekillendirme', description: 'Beard cutting and professional styling with hot towel treatment', price: 15000, duration: 30, isActive: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+      { id: 'service-3', barbershopId: 'salon-ahmet-id', name: 'Komple Bakım', description: 'Complete grooming package - hair + beard + facial care', price: 35000, duration: 60, isActive: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+      { id: 'service-4', barbershopId: 'salon-ahmet-id', name: 'Tıraş & Yüz Bakımı', description: 'Traditional shave with facial care and hot towel treatment', price: 18000, duration: 40, isActive: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+      { id: 'service-5', barbershopId: 'salon-ahmet-id', name: 'Saç Boyama', description: 'Professional hair coloring service with premium products', price: 25000, duration: 90, isActive: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+      { id: 'service-6', barbershopId: 'salon-ahmet-id', name: 'Doğal Kalıcı Saç Düzleştirici', description: 'Natural permanent hair straightening with Krystal & Botox treatment', price: 40000, duration: 120, isActive: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+      { id: 'service-7', barbershopId: 'salon-ahmet-id', name: 'Profesyonel Yüz Bakımları', description: 'Professional facial care and skincare treatments', price: 30000, duration: 60, isActive: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+      { id: 'service-8', barbershopId: 'salon-ahmet-id', name: 'Kaş Boyama', description: 'Eyebrow tinting and shaping service', price: 8000, duration: 30, isActive: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
     ]
     services.push(...salonServices)
   }
@@ -126,9 +130,9 @@ const initializeSalonAhmetData = () => {
   if (staff.length === 0) {
     // Add staff
     const salonStaff: Staff[] = [
-      { id: 'staff-1', barbershopId: 'salon-ahmet-id', name: 'Ahmet Usta', email: 'ahmet@salonahmetbarbers.com', phone: '+90 541 883 31 20', role: 'owner', isActive: true, createdAt: new Date().toISOString() },
-      { id: 'staff-2', barbershopId: 'salon-ahmet-id', name: 'Mehmet Usta', role: 'barber', isActive: true, createdAt: new Date().toISOString() },
-      { id: 'staff-3', barbershopId: 'salon-ahmet-id', name: 'Can Usta', role: 'barber', isActive: true, createdAt: new Date().toISOString() },
+      { id: 'staff-1', barbershopId: 'salon-ahmet-id', name: 'Ahmet Usta', email: 'ahmet@salonahmetbarbers.com', phone: '+90 541 883 31 20', role: 'owner', isActive: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+      { id: 'staff-2', barbershopId: 'salon-ahmet-id', name: 'Mehmet Usta', role: 'barber', isActive: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+      { id: 'staff-3', barbershopId: 'salon-ahmet-id', name: 'Can Usta', role: 'barber', isActive: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
     ]
     staff.push(...salonStaff)
   }
@@ -153,14 +157,6 @@ export const memoryStore = {
     return appointments.filter(apt => apt.barbershopId === barbershopId)
   },
 
-  updateAppointment: (id: string, updates: Partial<Appointment>): Appointment | null => {
-    const index = appointments.findIndex(apt => apt.id === id)
-    if (index !== -1) {
-      appointments[index] = { ...appointments[index], ...updates }
-      return appointments[index]
-    }
-    return null
-  },
 
   // Customers
   createCustomer: (data: Omit<Customer, 'id' | 'createdAt'>): Customer => {
@@ -272,7 +268,7 @@ export const memoryStore = {
     appointments[appointmentIndex] = {
       ...appointments[appointmentIndex],
       ...updates,
-      updatedAt: new Date(),
+      updatedAt: new Date().toISOString(),
     }
     
     return appointments[appointmentIndex]
