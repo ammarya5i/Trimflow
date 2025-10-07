@@ -8,7 +8,8 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from '@/hooks/use-toast'
-import { formatCurrency, formatDate, isValidEmail, isValidPhone } from '@/lib/utils'
+import { formatCurrency, formatDate } from '@/lib/utils'
+import { createValidator } from '@/lib/validation'
 import { Calendar, Clock, User, Phone, Mail, MapPin, Star, CheckCircle } from 'lucide-react'
 
 import { BarbershopWithDetails } from '@/types'
@@ -31,12 +32,16 @@ export function BookingPage({ barbershop }: BookingPageProps) {
     notes: '',
   })
   const [validationErrors, setValidationErrors] = useState({
+    name: '',
     email: '',
     phone: '',
   })
   const [availableSlots, setAvailableSlots] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
   const [loadingSlots, setLoadingSlots] = useState(false)
+  
+  // Initialize validator
+  const validator = createValidator()
 
   const steps = [
     { id: 1, title: 'Select Service', description: 'Choose your service' },
@@ -129,20 +134,24 @@ export function BookingPage({ barbershop }: BookingPageProps) {
     }
   }
 
+  const validateName = (name: string) => {
+    const result = validator.validateName(name)
+    return result.isValid ? '' : result.error || 'Invalid name'
+  }
+
   const validateEmail = (email: string) => {
-    if (!email) return ''
-    if (!isValidEmail(email)) {
-      return 'Please enter a valid email address (e.g., user@example.com)'
-    }
-    return ''
+    const result = validator.validateEmail(email)
+    return result.isValid ? '' : result.error || 'Invalid email'
   }
 
   const validatePhone = (phone: string) => {
-    if (!phone) return ''
-    if (!isValidPhone(phone)) {
-      return 'Please enter a valid phone number (e.g., +90 541 883 31 20 or 0541 883 31 20)'
-    }
-    return ''
+    const result = validator.validatePhone(phone)
+    return result.isValid ? '' : result.error || 'Invalid phone number'
+  }
+
+  const handleNameChange = (name: string) => {
+    setCustomerInfo(prev => ({ ...prev, name }))
+    setValidationErrors(prev => ({ ...prev, name: validateName(name) }))
   }
 
   const handleEmailChange = (email: string) => {
@@ -162,19 +171,18 @@ export function BookingPage({ barbershop }: BookingPageProps) {
       return
     }
 
-    // Validate email format
+    // Validate all fields with comprehensive validation
+    const nameError = validateName(customerInfo.name)
     const emailError = validateEmail(customerInfo.email)
-    if (emailError) {
-      setValidationErrors(prev => ({ ...prev, email: emailError }))
-      toast({ title: 'Please enter a valid email address', variant: 'destructive' })
-      return
-    }
-
-    // Validate phone format
     const phoneError = validatePhone(customerInfo.phone)
-    if (phoneError) {
-      setValidationErrors(prev => ({ ...prev, phone: phoneError }))
-      toast({ title: 'Please enter a valid phone number', variant: 'destructive' })
+
+    if (nameError || emailError || phoneError) {
+      setValidationErrors({
+        name: nameError,
+        email: emailError,
+        phone: phoneError,
+      })
+      toast({ title: 'Lütfen doğrulama hatalarını düzeltin', variant: 'destructive' })
       return
     }
 
@@ -370,10 +378,14 @@ export function BookingPage({ barbershop }: BookingPageProps) {
                 <Input
                   id="name"
                   value={customerInfo.name}
-                  onChange={(e) => setCustomerInfo(prev => ({ ...prev, name: e.target.value }))}
+                  onChange={(e) => handleNameChange(e.target.value)}
                   placeholder="Enter your full name"
                   required
+                  className={validationErrors.name ? 'border-red-500' : ''}
                 />
+                {validationErrors.name && (
+                  <p className="text-sm text-red-500 mt-1">{validationErrors.name}</p>
+                )}
               </div>
               <div>
                 <Label htmlFor="email">Email Address *</Label>
