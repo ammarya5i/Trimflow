@@ -9,10 +9,11 @@ import { signIn } from 'next-auth/react'
 import { toastError } from '@/hooks/use-toast'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 
 function SignInForm() {
   const searchParams = useSearchParams()
+  const router = useRouter()
   const isSignup = searchParams.get('signup') === '1'
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -31,6 +32,8 @@ function SignInForm() {
 
     setIsLoading(true)
     try {
+      console.log('Attempting sign in with:', { email, hasPassword: !!password })
+      
       const result = await signIn('credentials', {
         email,
         password,
@@ -38,19 +41,28 @@ function SignInForm() {
         callbackUrl: '/dashboard',
       })
 
+      console.log('Sign in result:', result)
+
       if (result?.error) {
+        console.error('Sign in error:', result.error)
         throw new Error(result.error)
       }
 
       if (result?.ok) {
+        console.log('Sign in successful, redirecting...')
         // Successful login, redirect based on user role
         // Check if user is admin (Ahmet)
         if (email === 'ahmet@salonahmetbarbers.com') {
-          window.location.href = '/dashboard'
+          console.log('Admin user detected, redirecting to dashboard')
+          router.push('/dashboard')
         } else {
+          console.log('Customer user detected, redirecting to home')
           // For customers, redirect to main page or booking page
-          window.location.href = '/'
+          router.push('/')
         }
+      } else {
+        console.log('Sign in failed - no error but not ok')
+        toastError('Sign in failed. Please try again.')
       }
     } catch (error) {
       console.error('Sign in error:', error)
