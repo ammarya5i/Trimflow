@@ -5,16 +5,19 @@ import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { useSession, signIn, signOut } from 'next-auth/react'
+import { useLanguage } from '@/lib/language-context'
+import { LanguageSwitcher } from '@/components/language-switcher'
 
 export function Navbar() {
   const pathname = usePathname()
   const { data: session } = useSession()
+  const { t } = useLanguage()
 
   const navLinks = [
-    { href: '/', label: 'Home' },
-    { href: '#services', label: 'Services' },
-    { href: '#features', label: 'About' },
-    { href: '#testimonials', label: 'Reviews' },
+    { href: '/', label: t('navigation.home') },
+    { href: '#services', label: t('navigation.services') },
+    { href: '#features', label: t('navigation.about') },
+    { href: '#testimonials', label: t('navigation.reviews') },
   ]
 
   const isDashboard = pathname?.startsWith('/dashboard')
@@ -44,23 +47,24 @@ export function Navbar() {
           ))}
         </nav>
         <div className="flex items-center space-x-2">
+          <LanguageSwitcher />
           <Button asChild>
-            <Link href="/s/salon-ahmet-barbers">Book Appointment</Link>
+            <Link href="/s/salon-ahmet-barbers">{t('navigation.bookAppointment')}</Link>
           </Button>
           {/* Only show admin access for Ahmet */}
           {session?.user?.email === 'ahmet@salonahmetbarbers.com' && (
             <>
               <Button variant="ghost" asChild>
-                <Link href="/dashboard">Admin Dashboard</Link>
+                <Link href="/dashboard">{t('navigation.dashboard')}</Link>
               </Button>
-              <Button variant="outline" onClick={() => signOut({ callbackUrl: '/' })}>Sign Out</Button>
+              <Button variant="outline" onClick={() => signOut({ callbackUrl: '/' })}>{t('navigation.signOut')}</Button>
             </>
           )}
           
           {/* Show sign in for Ahmet only */}
           {!session?.user && (
             <Button variant="ghost" asChild>
-              <Link href="/auth/signin">Admin Login</Link>
+              <Link href="/auth/signin">{t('navigation.adminLogin')}</Link>
             </Button>
           )}
         </div>

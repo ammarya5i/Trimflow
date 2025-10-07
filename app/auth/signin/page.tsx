@@ -10,10 +10,12 @@ import { toastError } from '@/hooks/use-toast'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { useSearchParams, useRouter } from 'next/navigation'
+import { useLanguage } from '@/lib/language-context'
 
 function SignInForm() {
   const searchParams = useSearchParams()
   const router = useRouter()
+  const { t } = useLanguage()
   const isSignup = searchParams.get('signup') === '1'
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -22,11 +24,11 @@ function SignInForm() {
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!email) {
-      toastError('Email is required')
+      toastError(t('auth.emailRequired'))
       return
     }
     if (!password || password.length < 6) {
-      toastError('Password must be at least 6 characters')
+      toastError(t('auth.passwordMinLength'))
       return
     }
 
@@ -62,11 +64,11 @@ function SignInForm() {
         }
       } else {
         console.log('Sign in failed - no error but not ok')
-        toastError('Sign in failed. Please try again.')
+        toastError(t('auth.signInFailed'))
       }
     } catch (error) {
       console.error('Sign in error:', error)
-      toastError('Failed to sign in. Please check your credentials and try again.')
+      toastError(t('auth.signInFailed'))
     } finally {
       setIsLoading(false)
     }
@@ -79,64 +81,64 @@ function SignInForm() {
           <Button variant="ghost" asChild className="mb-4">
             <Link href="/">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Home
+              {t('common.back')} {t('navigation.home')}
             </Link>
           </Button>
           <div className="flex items-center space-x-2 mb-4">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-lg">A</span>
             </div>
-            <span className="text-xl font-bold">Salon Ahmet Barbers</span>
+            <span className="text-xl font-bold">{t('salon.name')}</span>
           </div>
         </div>
 
         <Card>
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl">{isSignup ? 'Book Your Appointment' : 'Welcome back'}</CardTitle>
+            <CardTitle className="text-2xl">{isSignup ? t('auth.bookYourAppointment') : t('auth.welcomeBack')}</CardTitle>
             <CardDescription>
-              {isSignup ? 'Enter your details to book an appointment' : 'Sign in to manage your appointments'}
+              {isSignup ? t('auth.enterDetailsToBook') : t('auth.signInToManage')}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSignIn} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t('auth.email')}</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder={t('auth.enterEmail')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">{t('auth.password')}</Label>
                 <Input
                   id="password"
                   type="password"
-                  placeholder="Enter password (optional)"
+                  placeholder={t('auth.enterPassword')}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? (isSignup ? 'Booking...' : 'Signing in...') : (isSignup ? 'Book Appointment' : 'Sign In')}
+                {isLoading ? (isSignup ? t('auth.booking') : t('auth.signingIn')) : (isSignup ? t('auth.bookAppointment') : t('auth.signIn'))}
               </Button>
             </form>
             <div className="mt-6 text-center text-sm text-muted-foreground">
               {isSignup ? (
                 <>
-                  Already have an account?{' '}
+                  {t('auth.alreadyHaveAccount')}{' '}
                   <Link href="/auth/signin" className="text-primary hover:underline">
-                    Sign in
+                    {t('auth.signIn')}
                   </Link>
                 </>
               ) : (
                 <>
-                  New customer?{' '}
+                  {t('auth.newCustomer')}{' '}
                   <Link href="/auth/signin?signup=1" className="text-primary hover:underline">
-                    Book your first appointment
+                    {t('auth.bookFirstAppointment')}
                   </Link>
                 </>
               )}

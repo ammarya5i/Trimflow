@@ -17,6 +17,7 @@ import {
 import { useSession } from 'next-auth/react'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import Link from 'next/link'
+import { useLanguage } from '@/lib/language-context'
 
 interface DashboardStats {
   totalAppointments: number
@@ -30,6 +31,7 @@ interface DashboardStats {
 }
 
 export function DashboardOverview() {
+  const { t } = useLanguage()
   const [stats, setStats] = useState<DashboardStats>({
     totalAppointments: 0,
     totalRevenue: 0,
@@ -123,15 +125,15 @@ export function DashboardOverview() {
       {/* Welcome section */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Dashboard</h1>
+          <h1 className="text-3xl font-bold">{t('dashboard.title')}</h1>
           <p className="text-muted-foreground">
-            Welcome back! Here's what's happening with your barbershop.
+            {t('dashboard.welcomeMessage')}
           </p>
         </div>
         <Button asChild>
           <Link href="/dashboard/calendar">
             <Calendar className="w-4 h-4 mr-2" />
-            View Calendar
+            {t('dashboard.viewCalendar')}
           </Link>
         </Button>
       </div>
@@ -140,52 +142,52 @@ export function DashboardOverview() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Appointments</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('dashboard.totalAppointments')}</CardTitle>
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalAppointments}</div>
             <p className="text-xs text-muted-foreground">
-              {stats.todayAppointments} today
+              {stats.todayAppointments} {t('dashboard.today')}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('dashboard.totalRevenue')}</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatCurrency(stats.totalRevenue)}</div>
             <p className="text-xs text-muted-foreground">
-              {stats.completedAppointments} completed
+              {stats.completedAppointments} {t('dashboard.completed')}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Customers</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('dashboard.totalCustomers')}</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalCustomers}</div>
             <p className="text-xs text-muted-foreground">
-              Active customers
+              {t('dashboard.activeCustomers')}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Upcoming</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('dashboard.upcoming')}</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.upcomingAppointments}</div>
             <p className="text-xs text-muted-foreground">
-              Scheduled appointments
+              {t('dashboard.scheduledAppointments')}
             </p>
           </CardContent>
         </Card>

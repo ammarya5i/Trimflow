@@ -5,7 +5,7 @@ import { Navbar } from '@/components/navbar'
 import { AuthSessionProvider } from '@/components/session-provider'
 import { Toaster } from '@/components/ui/toaster'
 import { LanguageProvider } from '@/lib/language-context'
-import './globals.css'
+import '../globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -61,7 +61,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="tr" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

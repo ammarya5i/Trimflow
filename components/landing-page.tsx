@@ -16,89 +16,91 @@ import {
   Star
 } from 'lucide-react'
 import Link from 'next/link'
+import { useLanguage } from '@/lib/language-context'
 
 export function LandingPage() {
+  const { t } = useLanguage()
 
   const features = [
     {
       icon: Calendar,
-      title: 'Online Booking',
-      description: 'Book your appointment 24/7 with our easy online scheduling system.',
+      title: t('features.onlineBooking'),
+      description: t('features.onlineBookingDesc'),
     },
     {
       icon: Users,
-      title: 'Expert Barbers',
-      description: 'Professional barbers with years of experience in traditional and modern cuts.',
+      title: t('features.expertBarbers'),
+      description: t('features.expertBarbersDesc'),
     },
     {
       icon: BarChart3,
-      title: 'Premium Services',
-      description: 'Haircuts, beard trims, hot towel shaves, and luxury grooming treatments.',
+      title: t('features.premiumServices'),
+      description: t('features.premiumServicesDesc'),
     },
     {
       icon: Smartphone,
-      title: 'Mobile Friendly',
-      description: 'Book from anywhere with our mobile-optimized booking system.',
+      title: t('features.mobileFriendly'),
+      description: t('features.mobileFriendlyDesc'),
     },
     {
       icon: Globe,
-      title: 'Mecidiyeköy Location',
-      description: 'Conveniently located in Mecidiyeköy, Şişli with easy access and parking.',
+      title: t('features.mecidiyekoyLocation'),
+      description: t('features.mecidiyekoyLocationDesc'),
     },
     {
       icon: Shield,
-      title: 'Hygiene First',
-      description: 'Strict hygiene protocols and sanitized equipment for your safety.',
+      title: t('features.hygieneFirst'),
+      description: t('features.hygieneFirstDesc'),
     },
   ]
 
   const services = [
     {
-      name: 'Model Saç Kesimi',
+      name: t('services.modelCut'),
       price: '₺200',
       period: '',
-      description: 'Professional model haircut',
+      description: t('services.modelCutDesc'),
       features: [
-        'Professional model haircut',
+        t('services.modelCutDesc'),
         'Modern styling techniques',
         'Hair wash & conditioning',
         'Professional styling',
         'Consultation included',
       ],
-      cta: 'Book Now',
+      cta: t('navigation.bookAppointment'),
       popular: false,
     },
     {
-      name: 'Komple Bakım',
+      name: t('services.luxuryExperience'),
       price: '₺350',
       period: '',
-      description: 'Our most popular service',
+      description: t('services.luxuryExperienceDesc'),
       features: [
         'Complete hair & beard service',
         'Professional facial care',
-        'Hot towel treatment',
+        t('services.hotTowelShave'),
         'Hair wash & conditioning',
         'Professional styling',
         'Face massage',
         'Premium products',
       ],
-      cta: 'Book Now',
+      cta: t('navigation.bookAppointment'),
       popular: true,
     },
     {
-      name: 'Saç Boyama',
+      name: t('services.beardTrim'),
       price: '₺250',
       period: '',
-      description: 'Professional hair coloring',
+      description: t('services.beardTrimDesc'),
       features: [
-        'Professional hair coloring',
+        t('services.beardTrimDesc'),
         'Color consultation',
         'Hair treatment',
         'Styling included',
         'Premium color products',
         'Aftercare instructions',
       ],
-      cta: 'Book Now',
+      cta: t('navigation.bookAppointment'),
       popular: false,
     },
   ]
@@ -131,17 +133,15 @@ export function LandingPage() {
       <section className="py-20 px-4">
         <div className="container mx-auto text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            Welcome to{' '}
-            <span className="text-primary">Salon Ahmet Barbers</span>
+            {t('salon.tagline')}
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Experience premium grooming services in Mecidiyeköy, Istanbul. 
-            Book your appointment online and discover why we have a 4.9-star rating from 608+ satisfied customers.
+            {t('salon.description')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-md mx-auto">
             <Button asChild size="lg" className="w-full sm:w-auto">
               <Link href="/s/salon-ahmet-barbers">
-                Book Your Appointment Now
+                {t('navigation.bookAppointment')}
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Link>
             </Button>

@@ -20,6 +20,8 @@ import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { toast } from '@/hooks/use-toast'
+import { useLanguage } from '@/lib/language-context'
+import { LanguageSwitcher } from '@/components/language-switcher'
 
 interface DashboardLayoutProps {
   children: React.ReactNode
@@ -31,20 +33,21 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
+  const { t } = useLanguage()
 
   const navigation = [
-    { name: 'Overview', href: '/dashboard', icon: BarChart3 },
-    { name: 'Calendar', href: '/dashboard/calendar', icon: Calendar },
-    { name: 'Customers', href: '/dashboard/customers', icon: Users },
-    { name: 'Settings', href: '/dashboard/settings', icon: Settings },
+    { name: t('dashboard.overview'), href: '/dashboard', icon: BarChart3 },
+    { name: t('dashboard.calendar'), href: '/dashboard/calendar', icon: Calendar },
+    { name: t('dashboard.customers'), href: '/dashboard/customers', icon: Users },
+    { name: t('dashboard.settings'), href: '/dashboard/settings', icon: Settings },
   ]
 
   const handleSignOut = async () => {
     try {
       await signOut({ callbackUrl: '/' })
-      toast({ title: 'Signed out successfully' })
+      toast({ title: t('auth.signOut') + ' ' + t('common.success') })
     } catch (error) {
-      toast({ title: 'Failed to sign out', variant: 'destructive' })
+      toast({ title: t('auth.signOut') + ' ' + t('common.error'), variant: 'destructive' })
     }
   }
 
@@ -141,7 +144,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <input
                   type="text"
-                  placeholder="Search..."
+                  placeholder={t('common.search')}
                   className="pl-10 pr-4 py-2 border rounded-lg bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
@@ -157,9 +160,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 {isNotificationsOpen && (
                   <div className="absolute right-0 mt-2 w-64 rounded-md border bg-background shadow-lg z-50">
                     <div className="p-3 border-b">
-                      <div className="text-sm font-medium">Notifications</div>
+                      <div className="text-sm font-medium">{t('common.notifications')}</div>
                     </div>
-                    <div className="p-4 text-sm text-muted-foreground">No new notifications</div>
+                    <div className="p-4 text-sm text-muted-foreground">{t('common.noNotifications')}</div>
                   </div>
                 )}
               </div>
@@ -172,14 +175,15 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 </Button>
                 {isProfileMenuOpen && (
                   <div className="absolute right-0 mt-2 w-40 rounded-md border bg-background shadow-lg z-50">
-                    <Link href="/dashboard/settings" className="block px-3 py-2 text-sm hover:bg-muted">Settings</Link>
-                    <button className="w-full text-left px-3 py-2 text-sm hover:bg-muted" onClick={handleSignOut}>Sign Out</button>
+                    <Link href="/dashboard/settings" className="block px-3 py-2 text-sm hover:bg-muted">{t('dashboard.settings')}</Link>
+                    <button className="w-full text-left px-3 py-2 text-sm hover:bg-muted" onClick={handleSignOut}>{t('auth.signOut')}</button>
                   </div>
                 )}
               </div>
+              <LanguageSwitcher />
               <Button variant="ghost" onClick={handleSignOut}>
                 <LogOut className="w-4 h-4 mr-2" />
-                Sign Out
+                {t('auth.signOut')}
               </Button>
             </div>
           </div>
