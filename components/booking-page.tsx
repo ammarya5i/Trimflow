@@ -10,6 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { toast } from '@/hooks/use-toast'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { createValidator } from '@/lib/validation'
+import { verifyBookingData, isVerificationComplete } from '@/lib/real-verification'
+import { VerificationModal } from '@/components/verification-modal'
 import { Calendar, Clock, User, Phone, Mail, MapPin, Star, CheckCircle } from 'lucide-react'
 
 import { BarbershopWithDetails } from '@/types'
@@ -39,6 +41,11 @@ export function BookingPage({ barbershop }: BookingPageProps) {
   const [availableSlots, setAvailableSlots] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
   const [loadingSlots, setLoadingSlots] = useState(false)
+  const [showVerification, setShowVerification] = useState(false)
+  const [verificationData, setVerificationData] = useState({
+    emailVerificationSent: false,
+    phoneVerificationSent: false,
+  })
   
   // Initialize validator
   const validator = createValidator()
@@ -167,7 +174,13 @@ export function BookingPage({ barbershop }: BookingPageProps) {
   const handleBooking = async () => {
     // Validate all required fields
     if (!selectedService || !selectedStaff || !selectedDate || !selectedTime || !customerInfo.name || !customerInfo.email || !customerInfo.phone) {
-      toast({ title: 'Please complete all required fields', variant: 'destructive' })
+      toast({ title: 'Lütfen tüm gerekli alanları doldurun', variant: 'destructive' })
+      return
+    }
+
+    // Check if verification is already complete
+    if (isVerificationComplete(customerInfo.email, customerInfo.phone)) {
+      await proceedWithBooking()
       return
     }
 
@@ -186,6 +199,45 @@ export function BookingPage({ barbershop }: BookingPageProps) {
       return
     }
 
+    // Start real verification process
+    setLoading(true)
+    try {
+      const verificationResults = await verifyBookingData(
+        customerInfo.name,
+        customerInfo.email,
+        customerInfo.phone
+      )
+
+      // Check if verification was successful
+      if (verificationResults.email.isValid && verificationResults.phone.isValid) {
+        setVerificationData({
+          emailVerificationSent: verificationResults.email.verificationSent || false,
+          phoneVerificationSent: verificationResults.phone.verificationSent || false,
+        })
+        setShowVerification(true)
+      } else {
+        // Show validation errors
+        setValidationErrors({
+          name: verificationResults.name.error || '',
+          email: verificationResults.email.error || '',
+          phone: verificationResults.phone.error || '',
+        })
+        toast({ title: 'Doğrulama hatası', variant: 'destructive' })
+      }
+    } catch (error) {
+      console.error('Verification error:', error)
+      toast({ title: 'Doğrulama hatası oluştu', variant: 'destructive' })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleVerificationComplete = () => {
+    setShowVerification(false)
+    proceedWithBooking()
+  }
+
+  const proceedWithBooking = async () => {
     setLoading(true)
     try {
       // Create appointment via API
@@ -646,6 +698,17 @@ export function BookingPage({ barbershop }: BookingPageProps) {
           </Card>
         </div>
       </div>
+
+      {/* Verification Modal */}
+      <VerificationModal
+        isOpen={showVerification}
+        onClose={() => setShowVerification(false)}
+        onVerified={handleVerificationComplete}
+        email={customerInfo.email}
+        phone={customerInfo.phone}
+        emailVerificationSent={verificationData.emailVerificationSent}
+        phoneVerificationSent={verificationData.phoneVerificationSent}
+      />
     </div>
   )
 }
